@@ -1,5 +1,7 @@
 package com.example.chess;
 
+import java.util.ArrayList;
+
 public class Knight implements Piece {
 
     private final COLOR color;
@@ -9,12 +11,22 @@ public class Knight implements Piece {
     }
 
     @Override
-    public Cell[] getLegalMoves(Cell from) {
-        return new Cell[0];
+    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
+        return null;
     }
 
     @Override
     public char toChar() {
         return 'N';
+    }
+
+    @Override
+    public boolean isVoidPiece() {
+        return false;
+    }
+
+    @Override
+    public COLOR getColor() {
+        return this.color;
     }
 }

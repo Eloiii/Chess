@@ -8,10 +8,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Launcher extends Application {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IllegalMoveException {
 //        launch();
         Game game = new Game();
-        game.getBoard().printBoard();
+        game.startGame();
     }
 
     @Override

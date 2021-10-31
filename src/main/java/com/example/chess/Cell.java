@@ -32,4 +32,8 @@ public class Cell {
     public int getCol() {
         return col;
     }
+
+    public boolean isEmptyCell() {
+        return this.piece.isVoidPiece();
+    }
 }

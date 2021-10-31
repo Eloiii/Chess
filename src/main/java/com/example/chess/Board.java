@@ -1,12 +1,12 @@
 package com.example.chess;
 
+import java.util.ArrayList;
+
 public class Board {
-    private static final int MAX_COL = 8;
-    private static final int MAX_ROW = 8;
     private final Cell[][] cells;
 
     public Board() {
-        this.cells = new Cell[MAX_ROW][MAX_COL];
+        this.cells = new Cell[BoardDimensions.MAX_ROW.getValue()][BoardDimensions.MAX_COL.getValue()];
     }
 
     public Cell at(int row, int col) throws IndexOutOfBoundsException {
@@ -15,11 +15,13 @@ public class Board {
         return this.cells[row][col];
     }
 
-    public void move(Cell from, int rowTo, int colTo) {
-        if (legalMove(from, rowTo, colTo))
-            System.out.println("Move legal");
-        else
-            System.out.println("Move pas legal");
+    public boolean move(Cell from, int rowTo, int colTo) throws IllegalMoveException {
+        if (isALegalMove(from, rowTo, colTo)) {
+            this.setPiece(from.getRow(), from.getCol(), new VoidPiece());
+            this.setPiece(rowTo, colTo, from.getPiece());
+            return true;
+        } else
+            throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + rowTo + "," + colTo);
     }
 
     public void setPiece(int row, int col, Piece piece) throws IndexOutOfBoundsException {
@@ -28,8 +30,8 @@ public class Board {
         this.cells[row][col] = new Cell(row, col, piece);
     }
 
-    private boolean legalMove(Cell cellFrom, int rowTo, int colTo) {
-        Cell[] possibleMoves = cellFrom.getPiece().getLegalMoves(cellFrom);
+    private boolean isALegalMove(Cell cellFrom, int rowTo, int colTo) {
+        ArrayList<Cell> possibleMoves = cellFrom.getPiece().getLegalMoves(cellFrom.getRow(), cellFrom.getCol(), this);
         for (Cell currentMove : possibleMoves) {
             if (!this.outOfBounds(currentMove.getRow(), currentMove.getCol())) {
                 if (currentMove.getCol() == colTo && currentMove.getRow() == rowTo)
@@ -40,7 +42,7 @@ public class Board {
     }
 
     private boolean outOfBounds(int row, int col) {
-        return !(row >= 0 && row < MAX_ROW && col >= 0 && col < MAX_COL);
+        return !(row >= 0 && row < BoardDimensions.MAX_ROW.getValue() && col >= 0 && col < BoardDimensions.MAX_COL.getValue());
     }
 
     public void initPieces() throws IllegalStateException {
@@ -50,8 +52,8 @@ public class Board {
     }
 
     private void setVoidPieces() {
-        for (int row = 0; row < MAX_ROW; row++) {
-            for (int col = 0; col < MAX_COL; col++) {
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
                 this.setPiece(row, col, new VoidPiece());
             }
         }
@@ -60,7 +62,7 @@ public class Board {
 
     private void setPieces(int row, COLOR color) throws IllegalStateException {
         Piece piece;
-        for (int i = 0; i < MAX_COL; i++) {
+        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
             switch (i) {
                 case 0:
                 case 7:
@@ -86,14 +88,14 @@ public class Board {
             this.setPiece(row, i, piece);
         }
         int pawnRow = color == COLOR.BLACK ? 1 : 6;
-        for (int j = 0; j < MAX_COL; j++) {
+        for (int j = 0; j < BoardDimensions.MAX_COL.getValue(); j++) {
             this.setPiece(pawnRow, j, new Pawn(color));
         }
     }
 
     public void printBoard() {
-        for (int row = 0; row < MAX_ROW; row++) {
-            for (int col = 0; col < MAX_COL; col++) {
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
                 System.out.print(this.cells[row][col].getPiece().toChar());
                 System.out.print(" ");
             }

@@ -1,10 +1,10 @@
 package com.example.chess;
 
-public class King implements Piece{
+public class Rook implements Piece{
 
     private final COLOR color;
 
-    public King(COLOR color) {
+    public Rook(COLOR color) {
         this.color = color;
     }
 
@@ -15,6 +15,6 @@ public class King implements Piece{
 
     @Override
     public char toChar() {
-        return 'K';
+        return 'R';
     }
 }

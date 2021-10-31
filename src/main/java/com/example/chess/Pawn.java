@@ -17,6 +17,6 @@ public class Pawn implements Piece{
 
     @Override
     public char toChar() {
-        return 'p';
+        return 'P';
     }
 }

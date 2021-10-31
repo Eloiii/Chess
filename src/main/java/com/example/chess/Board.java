@@ -44,9 +44,15 @@ public class Board {
     }
 
     public void initPieces() {
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(0, i, new VoidPiece());
-        }
+        this.setPiece(0, 0, new Rook(COLOR.BLACK));
+        this.setPiece(0, 1, new Knight(COLOR.BLACK));
+        this.setPiece(0, 2, new Bishop(COLOR.BLACK));
+        this.setPiece(0, 3, new Queen(COLOR.BLACK));
+        this.setPiece(0, 4, new King(COLOR.BLACK));
+        this.setPiece(0, 5, new Bishop(COLOR.BLACK));
+        this.setPiece(0, 6, new Knight(COLOR.BLACK));
+        this.setPiece(0, 7, new Rook(COLOR.BLACK));
+
         for (int i = 0; i < MAX_COL; i++) {
             this.setPiece(1, i, new Pawn(COLOR.BLACK));
         }
@@ -65,9 +71,15 @@ public class Board {
         for (int j = 0; j < MAX_COL; j++) {
             this.setPiece(6, j, new Pawn(COLOR.BLACK));
         }
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(7, i, new VoidPiece());
-        }
+
+        this.setPiece(7, 0, new Rook(COLOR.WHITE));
+        this.setPiece(7, 1, new Knight(COLOR.WHITE));
+        this.setPiece(7, 2, new Bishop(COLOR.WHITE));
+        this.setPiece(7, 3, new Queen(COLOR.WHITE));
+        this.setPiece(7, 4, new King(COLOR.WHITE));
+        this.setPiece(7, 5, new Bishop(COLOR.WHITE));
+        this.setPiece(7, 6, new Knight(COLOR.WHITE));
+        this.setPiece(7, 7, new Rook(COLOR.WHITE));
     }
 
     public void printBoard() {

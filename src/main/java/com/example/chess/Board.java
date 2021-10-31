@@ -23,7 +23,7 @@ public class Board {
     }
 
     public void setPiece(int row, int col, Piece piece) throws IndexOutOfBoundsException {
-        if(this.outOfBounds(row, col))
+        if (this.outOfBounds(row, col))
             throw new IndexOutOfBoundsException();
         this.cells[row][col] = new Cell(row, col, piece);
     }
@@ -43,43 +43,52 @@ public class Board {
         return !(row >= 0 && row < MAX_ROW && col >= 0 && col < MAX_COL);
     }
 
-    public void initPieces() {
-        this.setPiece(0, 0, new Rook(COLOR.BLACK));
-        this.setPiece(0, 1, new Knight(COLOR.BLACK));
-        this.setPiece(0, 2, new Bishop(COLOR.BLACK));
-        this.setPiece(0, 3, new Queen(COLOR.BLACK));
-        this.setPiece(0, 4, new King(COLOR.BLACK));
-        this.setPiece(0, 5, new Bishop(COLOR.BLACK));
-        this.setPiece(0, 6, new Knight(COLOR.BLACK));
-        this.setPiece(0, 7, new Rook(COLOR.BLACK));
+    public void initPieces() throws IllegalStateException {
+        setVoidPieces();
+        setPieces(0, COLOR.BLACK);
+        setPieces(7, COLOR.WHITE);
+    }
 
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(1, i, new Pawn(COLOR.BLACK));
+    private void setVoidPieces() {
+        for (int row = 0; row < MAX_ROW; row++) {
+            for (int col = 0; col < MAX_COL; col++) {
+                this.setPiece(row, col, new VoidPiece());
+            }
         }
+
+    }
+
+    private void setPieces(int row, COLOR color) throws IllegalStateException {
+        Piece piece;
         for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(2, i, new VoidPiece());
+            switch (i) {
+                case 0:
+                case 7:
+                    piece = new Rook(color);
+                    break;
+                case 1:
+                case 6:
+                    piece = new Knight(color);
+                    break;
+                case 2:
+                case 5:
+                    piece = new Bishop(color);
+                    break;
+                case 3:
+                    piece = new Queen(color);
+                    break;
+                case 4:
+                    piece = new King(color);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + i);
+            }
+            this.setPiece(row, i, piece);
         }
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(3, i, new VoidPiece());
-        }
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(4, i, new VoidPiece());
-        }
-        for (int i = 0; i < MAX_COL; i++) {
-            this.setPiece(5, i, new VoidPiece());
-        }
+        int pawnRow = color == COLOR.BLACK ? 1 : 6;
         for (int j = 0; j < MAX_COL; j++) {
-            this.setPiece(6, j, new Pawn(COLOR.BLACK));
+            this.setPiece(pawnRow, j, new Pawn(color));
         }
-
-        this.setPiece(7, 0, new Rook(COLOR.WHITE));
-        this.setPiece(7, 1, new Knight(COLOR.WHITE));
-        this.setPiece(7, 2, new Bishop(COLOR.WHITE));
-        this.setPiece(7, 3, new Queen(COLOR.WHITE));
-        this.setPiece(7, 4, new King(COLOR.WHITE));
-        this.setPiece(7, 5, new Bishop(COLOR.WHITE));
-        this.setPiece(7, 6, new Knight(COLOR.WHITE));
-        this.setPiece(7, 7, new Rook(COLOR.WHITE));
     }
 
     public void printBoard() {

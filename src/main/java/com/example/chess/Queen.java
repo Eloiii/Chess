@@ -1,6 +1,6 @@
 package com.example.chess;
 
-public class Queen implements Piece{
+public class Queen implements Piece {
 
     private final COLOR color;
 

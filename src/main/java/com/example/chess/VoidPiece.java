@@ -1,6 +1,6 @@
 package com.example.chess;
 
-public class VoidPiece implements Piece{
+public class VoidPiece implements Piece {
     public String toString() {
         return "";
     }
@@ -12,6 +12,6 @@ public class VoidPiece implements Piece{
 
     @Override
     public char toChar() {
-        return 0;
+        return '.';
     }
 }

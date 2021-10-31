@@ -21,15 +21,15 @@ public class Cell {
         return this.piece;
     }
 
+    public void setPiece(Piece piece) {
+        this.piece = piece;
+    }
+
     public int getRow() {
         return row;
     }
 
     public int getCol() {
         return col;
-    }
-
-    public void setPiece(Piece piece) {
-        this.piece = piece;
     }
 }

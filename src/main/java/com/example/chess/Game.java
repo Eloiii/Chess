@@ -1,7 +1,7 @@
 package com.example.chess;
 
 public class Game {
-    private Board board;
+    private final Board board;
     private int turnNumber;
     private COLOR turn;
 
@@ -11,10 +11,10 @@ public class Game {
     }
 
     private void changeTurn() {
-        if(this.turn == COLOR.BLACK)
+        if (this.turn == COLOR.BLACK)
             this.turn = COLOR.WHITE;
         else
-            this.turn =  COLOR.BLACK;
+            this.turn = COLOR.BLACK;
     }
 
     public void nextTurn() {

@@ -12,7 +12,14 @@ public class Bishop implements Piece {
 
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
-        return null;
+        ArrayList<Cell> results = new ArrayList<>();
+
+        //diagonal bas droite
+        for (int rowIndex = rowFrom; rowIndex < BoardDimensions.MAX_ROW.getValue(); rowIndex++) {
+            if (Piece.checkCell(colFrom + rowIndex, rowFrom + rowIndex, board, results, this.color)) break;
+        }
+
+        return results;
     }
 
     @Override

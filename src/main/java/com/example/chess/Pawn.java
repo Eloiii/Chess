@@ -26,16 +26,17 @@ public class Pawn implements Piece {
                 results.add(new Cell(rowFrom + shiftDouble, colFrom));
         }
 
-        if (colFrom != 0 && colFrom != 7) {
+        if (colFrom != 7) {
             Piece pieceDiagonalRight = board.at(rowFrom + shiftSingle, colFrom + 1).getPiece();
             if (!pieceDiagonalRight.isVoidPiece() && pieceDiagonalRight.getColor() != this.color)
                 results.add(new Cell(rowFrom + shiftSingle, colFrom + 1));
-
-
+        }
+        if (colFrom != 0) {
             Piece pieceDiagonalLeft = board.at(rowFrom + shiftSingle, colFrom - 1).getPiece();
             if (!pieceDiagonalLeft.isVoidPiece() && pieceDiagonalLeft.getColor() != this.color)
                 results.add(new Cell(rowFrom + shiftSingle, colFrom - 1));
         }
+
         return results;
     }
 

@@ -13,12 +13,38 @@ public class Bishop implements Piece {
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
         ArrayList<Cell> results = new ArrayList<>();
+        int stop;
 
-        //diagonal bas droite
-        for (int rowIndex = rowFrom; rowIndex < BoardDimensions.MAX_ROW.getValue(); rowIndex++) {
-            if (Piece.checkCell(colFrom + rowIndex, rowFrom + rowIndex, board, results, this.color)) break;
+        //bas droite
+        stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
+
+        if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {
+            for (int index = rowFrom + 1; index < rowFrom + stop; index++) {
+                if (Piece.checkCell(index, colFrom + (index - rowFrom), board, results, this.color)) break;
+            }
         }
 
+
+        //haut gauche
+        if (colFrom != 0) {
+            for (int index = rowFrom - 1; index > -1; index--) {
+                if (Piece.checkCell(index, colFrom + (index - rowFrom), board, results, this.color)) break;
+            }
+        }
+
+
+        //bas gauche
+        if (colFrom != 0) {
+            for (int index = rowFrom + 1; index < Math.abs(colFrom - rowFrom - 1); index++) {
+                if (Piece.checkCell(index, colFrom - (index - rowFrom), board, results, this.color)) break;
+            }
+        }
+
+
+        //haut droite
+//        for (int index = rowFrom - 1; index > -1; index--) {
+//            if (Piece.checkCell(index, colFrom - (index - rowFrom), board, results, this.color)) break;
+//        }
         return results;
     }
 

@@ -4,11 +4,9 @@ import java.util.ArrayList;
 
 public class Board {
     private final Cell[][] cells;
-    public boolean boardInitialized;
 
     private Board() {
         this.cells = new Cell[BoardDimensions.MAX_ROW.getValue()][BoardDimensions.MAX_COL.getValue()];
-        this.boardInitialized = false;
         this.initPieces();
     }
 
@@ -67,9 +65,11 @@ public class Board {
 
     public void initPieces() throws IllegalStateException {
         setVoidPieces();
-        setPieces(0, COLOR.BLACK);
-        setPieces(7, COLOR.WHITE);
-        this.boardInitialized = true;
+//        setPieces(0, COLOR.BLACK);
+//        setPieces(7, COLOR.WHITE);
+        setPiece(1, 2, new Bishop(COLOR.WHITE));
+        setPiece(0, 0, new Pawn(COLOR.BLACK));
+
     }
 
     private void setVoidPieces() {

@@ -11,14 +11,14 @@ public interface Piece {
 
     COLOR getColor();
 
-    static boolean checkCell(int rowFor, int colFrom, Board board, ArrayList<Cell> results, COLOR color) {
-        Piece piece = board.at(rowFor, colFrom).getPiece();
+    static boolean checkCell(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
+        Piece piece = board.at(row, col).getPiece();
         if (!piece.isVoidPiece()) {
             if (piece.getColor() != color)
-                results.add(new Cell(rowFor, colFrom));
+                results.add(new Cell(row, col));
             return true;
         }
-        results.add(new Cell(rowFor, colFrom));
+        results.add(new Cell(row, col));
         return false;
     }
 }

@@ -35,9 +35,11 @@ public class Game {
     }
 
     public void selectPiece(int row, int col, WindowController controller) throws IllegalMoveException {
-        if (this.pieceSelected == null || this.pieceSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor())
+        if (this.pieceSelected == null || this.pieceSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor()) {
             this.pieceSelected = this.board.at(row, col);
-        else
+            if (this.pieceSelected.getPiece().getColor() != this.turn)
+                throw new IllegalMoveException("Wrong color selected : selected " + this.pieceSelected.getPiece().getColor() + " but it is " + this.turn + " to move.");
+        } else
             makeAMove(row, col, controller);
     }
 

@@ -214,14 +214,17 @@ public class WindowController {
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(100);
-        pane.getChildren().add(imageView);
+        if (pane.getChildren().size() >= 1)
+            pane.getChildren().set(0, imageView);
+        else
+            pane.getChildren().add(imageView);
     }
 
-    private void setImage(Pane pane, Image img) {
-        ImageView imageView = new ImageView(img);
-        imageView.setPreserveRatio(true);
-        imageView.setFitWidth(100);
-        pane.getChildren().add(imageView);
+    private void setImage(Pane pane, ImageView img) {
+        if (pane.getChildren().size() >= 1)
+            pane.getChildren().set(0, img);
+        else
+            pane.getChildren().add(img);
     }
 
     private Node getNodeFromGridPane(int row, int col) {
@@ -237,11 +240,10 @@ public class WindowController {
         Pane paneFrom = (Pane) getNodeFromGridPane(from.getRow(), from.getCol());
         assert paneFrom != null;
         ImageView imageView = (ImageView) paneFrom.getChildren().get(0);
-        Image image = imageView.getImage();
 
         Pane paneTo = (Pane) getNodeFromGridPane(rowTo, colTo);
         assert paneTo != null;
-        this.setImage(paneTo, image);
+        this.setImage(paneTo, imageView);
         paneFrom.getChildren().clear();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.chess;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -245,5 +246,24 @@ public class WindowController {
         assert paneTo != null;
         this.setImage(paneTo, imageView);
         paneFrom.getChildren().clear();
+    }
+
+    public void colorCell(Cell cell, String color) {
+        Pane pane = (Pane) getNodeFromGridPane(cell.getRow(), cell.getCol());
+        assert pane != null;
+        Platform.runLater(() -> pane.setStyle("-fx-background-color: " + color));
+    }
+
+    public void resetColors(Board board) {
+        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+            for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
+                Cell cell = board.at(j, i);
+                if ((i + j) % 2 == 1)
+                    colorCell(cell, "#4b7399");
+                if ((i + j) % 2 == 0)
+                    colorCell(cell, "white");
+
+            }
+        }
     }
 }

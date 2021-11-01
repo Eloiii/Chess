@@ -9,7 +9,7 @@ public class PieceTest {
 
     @Test
     public void getLegalMoves() throws IllegalMoveException {
-        Game game = new Game();
+        Game game = Game.getInstance();
         game.getBoard().printBoard();
 
         pawnTests(game);

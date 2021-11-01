@@ -19,6 +19,7 @@ public class Board {
         if (isALegalMove(from, rowTo, colTo)) {
             this.setPiece(from.getRow(), from.getCol(), new VoidPiece());
             this.setPiece(rowTo, colTo, from.getPiece());
+            System.out.println("Moved piece " + from.getPiece().toChar() + " from " + from.getRow() + "," + from.getCol() + " to " + rowTo + "," + colTo);
             return true;
         } else
             throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + rowTo + "," + colTo);

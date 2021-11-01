@@ -1,6 +1,7 @@
 package com.example.chess;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -131,7 +132,13 @@ public class WindowController {
 
     private void addPane(int colIndex, int rowIndex) {
         Pane pane = new Pane();
-        pane.setOnMouseClicked(e -> System.out.printf("Mouse enetered cell [%d, %d]%n", colIndex, rowIndex));
+        pane.setOnMouseClicked(e -> {
+            try {
+                Game.getInstance().selectPiece(rowIndex, colIndex, this);
+            } catch (IllegalMoveException ex) {
+                ex.printStackTrace();
+            }
+        });
         pane.setMaxSize(100, 100);
         pane.setMinSize(100, 100);
         if ((colIndex + rowIndex) % 2 == 1)
@@ -196,6 +203,10 @@ public class WindowController {
         grid.add(pane, colIndex, rowIndex);
     }
 
+    private void cellClicked(int rowIndex, int colIndex) {
+
+    }
+
     private void setImage(Pane pane, String img) {
         URL input = WindowController.class.getResource(img);
         assert input != null;
@@ -204,5 +215,33 @@ public class WindowController {
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(100);
         pane.getChildren().add(imageView);
+    }
+
+    private void setImage(Pane pane, Image img) {
+        ImageView imageView = new ImageView(img);
+        imageView.setPreserveRatio(true);
+        imageView.setFitWidth(100);
+        pane.getChildren().add(imageView);
+    }
+
+    private Node getNodeFromGridPane(int row, int col) {
+        for (Node node : this.grid.getChildren()) {
+            if (node instanceof Pane && GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    public void moveImages(Cell from, int rowTo, int colTo) {
+        Pane paneFrom = (Pane) getNodeFromGridPane(from.getRow(), from.getCol());
+        assert paneFrom != null;
+        ImageView imageView = (ImageView) paneFrom.getChildren().get(0);
+        Image image = imageView.getImage();
+
+        Pane paneTo = (Pane) getNodeFromGridPane(rowTo, colTo);
+        assert paneTo != null;
+        this.setImage(paneTo, image);
+        paneFrom.getChildren().clear();
     }
 }

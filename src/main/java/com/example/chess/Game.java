@@ -1,16 +1,22 @@
 package com.example.chess;
 
-import java.util.Scanner;
-
 public class Game {
     private final Board board;
     private int turnNumber;
     private COLOR turn;
+    private Cell pieceSelected;
 
-    public Game() {
+    private Game() {
         this.board = new Board();
         this.board.initPieces();
         this.turn = COLOR.WHITE;
+        this.pieceSelected = null;
+    }
+
+    private static final Game INSTANCE = new Game();
+
+    public static Game getInstance() {
+        return INSTANCE;
     }
 
     private void changeTurn() {
@@ -28,19 +34,19 @@ public class Game {
         return board;
     }
 
-    public void startGame() throws IllegalMoveException {
-        Scanner scanner = new Scanner(System.in);
-        while (!gameOver()) {
-            this.board.printBoard();
-            System.out.println("Move (rowFrom,colFrom rowTo,colTo): " + this.turn + " to play");
-            String input = scanner.nextLine();
-            Cell from = this.board.at(Character.getNumericValue(input.charAt(0)), Character.getNumericValue(input.charAt(2)));
-            this.board.move(from, Character.getNumericValue(input.charAt(4)), Character.getNumericValue(input.charAt(6)));
-            this.nextTurn();
-            this.changeTurn();
-        }
+    public void selectPiece(int row, int col, WindowController controller) throws IllegalMoveException {
+        if (this.pieceSelected == null || this.pieceSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor())
+            this.pieceSelected = this.board.at(row, col);
+        else
+            makeAMove(row, col, controller);
+    }
 
-
+    private void makeAMove(int row, int col, WindowController controller) throws IllegalMoveException {
+        this.board.move(this.pieceSelected, row, col);
+        controller.moveImages(this.pieceSelected, row, col);
+        this.pieceSelected = null;
+        this.nextTurn();
+        this.changeTurn();
     }
 
     public boolean gameOver() {

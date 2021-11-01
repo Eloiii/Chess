@@ -4,9 +4,18 @@ import java.util.ArrayList;
 
 public class Board {
     private final Cell[][] cells;
+    public boolean boardInitialized;
 
-    public Board() {
+    private Board() {
         this.cells = new Cell[BoardDimensions.MAX_ROW.getValue()][BoardDimensions.MAX_COL.getValue()];
+        this.boardInitialized = false;
+        this.initPieces();
+    }
+
+    private static final Board INSTANCE = new Board();
+
+    public static Board getInstance() {
+        return INSTANCE;
     }
 
     public Cell at(int row, int col) throws IndexOutOfBoundsException {
@@ -60,6 +69,7 @@ public class Board {
         setVoidPieces();
         setPieces(0, COLOR.BLACK);
         setPieces(7, COLOR.WHITE);
+        this.boardInitialized = true;
     }
 
     private void setVoidPieces() {
@@ -72,7 +82,7 @@ public class Board {
     }
 
     private void setPieces(int row, COLOR color) throws IllegalStateException {
-        Piece piece;
+        Piece piece = null;
         for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
             switch (i) {
                 case 0:
@@ -94,7 +104,6 @@ public class Board {
                     piece = new King(color);
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + i);
             }
             this.setPiece(row, i, piece);
         }

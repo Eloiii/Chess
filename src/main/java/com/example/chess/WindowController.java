@@ -11,110 +11,16 @@ import java.net.URL;
 
 public class WindowController {
 
-    @FXML
-    private ImageView Bishop2Black;
-
-    @FXML
-    private ImageView Bishop2White;
-
-    @FXML
-    private ImageView Bishop5Black;
-
-    @FXML
-    private ImageView Bishop5White;
-
-    @FXML
-    private ImageView KingBlack;
-
-    @FXML
-    private ImageView KingWhite;
-
-    @FXML
-    private ImageView Knight1Black;
-
-    @FXML
-    private ImageView Knight1White;
-
-    @FXML
-    private ImageView Knight6Black;
-
-    @FXML
-    private ImageView Knight6White;
-
-    @FXML
-    private ImageView QueenBlack;
-
-    @FXML
-    private ImageView QueenWhite;
-
-    @FXML
-    private ImageView Rook0Black;
-
-    @FXML
-    private ImageView Rook0White;
-
-    @FXML
-    private ImageView Rook7Black;
-
-    @FXML
-    private ImageView Rook7White;
 
     @FXML
     private GridPane grid;
 
-    @FXML
-    private ImageView pawn0Black;
-
-    @FXML
-    private ImageView pawn0White;
-
-    @FXML
-    private ImageView pawn1Black;
-
-    @FXML
-    private ImageView pawn1White;
-
-    @FXML
-    private ImageView pawn2Black;
-
-    @FXML
-    private ImageView pawn2White;
-
-    @FXML
-    private ImageView pawn3Black;
-
-    @FXML
-    private ImageView pawn3White;
-
-    @FXML
-    private ImageView pawn4Black;
-
-    @FXML
-    private ImageView pawn4White;
-
-    @FXML
-    private ImageView pawn5Black;
-
-    @FXML
-    private ImageView pawn5White;
-
-    @FXML
-    private ImageView pawn6Black;
-
-    @FXML
-    private ImageView pawn6White;
-
-    @FXML
-    private ImageView pawn7Black;
-
-    @FXML
-    private ImageView pawn7White;
-
     public void initialize() {
+        Board board = Board.getInstance();
 
         for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
             for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
-                addPane(i, j);
+                addPane(i, j, board);
             }
         }
 
@@ -131,7 +37,7 @@ public class WindowController {
         }
     }
 
-    private void addPane(int colIndex, int rowIndex) {
+    private void addPane(int colIndex, int rowIndex, Board board) {
         Pane pane = new Pane();
         pane.setOnMouseClicked(e -> {
             try {
@@ -144,68 +50,48 @@ public class WindowController {
         pane.setMinSize(100, 100);
         if ((colIndex + rowIndex) % 2 == 1)
             pane.setStyle("-fx-background-color: #4b7399");
-        switch (rowIndex) {
-            case 0:
-                switch (colIndex) {
-                    case 0:
-                    case 7:
-                        setImage(pane, "Rook_Black.png");
-                        break;
-                    case 1:
-                    case 6:
-                        setImage(pane, "Knight_Black.png");
-                        break;
-                    case 2:
-                    case 5:
-                        setImage(pane, "Bishop_Black.png");
-                        break;
-                    case 3:
-                        setImage(pane, "Queen_Black.png");
-                        break;
-                    case 4:
-                        setImage(pane, "King_Black.png");
-                        break;
-                }
+        Piece piece = board.at(rowIndex, colIndex).getPiece();
+        switch (piece.toChar()) {
+            case 'P':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "Pawn_Black.png");
+                else
+                    setImage(pane, "Pawn_White.png");
                 break;
-            case 1:
-                setImage(pane, "Pawn_Black.png");
+            case 'B':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "Bishop_Black.png");
+                else
+                    setImage(pane, "Bishop_White.png");
                 break;
-            case 6:
-                setImage(pane, "Pawn_White.png");
+            case 'R':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "Rook_Black.png");
+                else
+                    setImage(pane, "Rook_White.png");
                 break;
-            case 7:
-                switch (colIndex) {
-                    case 0:
-                    case 7:
-                        setImage(pane, "Rook_White.png");
-                        break;
-                    case 1:
-                    case 6:
-                        setImage(pane, "Knight_White.png");
-                        break;
-                    case 2:
-                    case 5:
-                        setImage(pane, "Bishop_White.png");
-                        break;
-                    case 3:
-                        setImage(pane, "Queen_White.png");
-                        break;
-                    case 4:
-                        setImage(pane, "King_White.png");
-                        break;
-                }
+            case 'K':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "King_Black.png");
+                else
+                    setImage(pane, "King_White.png");
                 break;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
+            case 'Q':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "Queen_Black.png");
+                else
+                    setImage(pane, "Queen_White.png");
                 break;
+            case 'N':
+                if (piece.getColor() == COLOR.BLACK)
+                    setImage(pane, "Knight_Black.png");
+                else
+                    setImage(pane, "Knight_White.png");
+                break;
+            default:
+                System.err.println("INITALISATION PIECE INCONNUE");
         }
         grid.add(pane, colIndex, rowIndex);
-    }
-
-    private void cellClicked(int rowIndex, int colIndex) {
-
     }
 
     private void setImage(Pane pane, String img) {

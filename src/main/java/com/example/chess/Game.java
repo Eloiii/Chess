@@ -9,8 +9,7 @@ public class Game {
     private Cell pieceSelected;
 
     private Game() {
-        this.board = new Board();
-        this.board.initPieces();
+        this.board = Board.getInstance();
         this.turn = COLOR.WHITE;
         this.pieceSelected = null;
     }

@@ -12,7 +12,12 @@ public class Queen implements Piece {
 
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
-        return null;
+        ArrayList<Cell> results = new ArrayList<>();
+        ArrayList<Cell> bishopMovements = new Bishop(this.color).getLegalMoves(rowFrom, colFrom, board);
+        ArrayList<Cell> rookMovements = new Rook(this.color).getLegalMoves(rowFrom, colFrom, board);
+        results.addAll(bishopMovements);
+        results.addAll(rookMovements);
+        return results;
     }
 
     @Override

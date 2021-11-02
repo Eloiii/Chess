@@ -27,7 +27,7 @@ public class Rook implements Piece {
             if (Piece.cellIsNotVoid(rowFrom, colFor, board, results, this.color)) break;
         }
         //Gauche
-        for (int colFor = rowFrom - 1; colFor > -1; colFor--) {
+        for (int colFor = colFrom - 1; colFor > -1; colFor--) {
             if (Piece.cellIsNotVoid(rowFrom, colFor, board, results, this.color)) break;
         }
         return results;

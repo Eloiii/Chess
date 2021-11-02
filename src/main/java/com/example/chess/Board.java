@@ -3,14 +3,13 @@ package com.example.chess;
 import java.util.ArrayList;
 
 public class Board {
+    private static final Board INSTANCE = new Board();
     private final Cell[][] cells;
 
     private Board() {
         this.cells = new Cell[BoardDimensions.MAX_ROW.getValue()][BoardDimensions.MAX_COL.getValue()];
         this.initPieces();
     }
-
-    private static final Board INSTANCE = new Board();
 
     public static Board getInstance() {
         return INSTANCE;

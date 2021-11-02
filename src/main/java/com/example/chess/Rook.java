@@ -32,6 +32,7 @@ public class Rook implements Piece {
         }
         return results;
     }
+
     @Override
     public char toChar() {
         return 'R';

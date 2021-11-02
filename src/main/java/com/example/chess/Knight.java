@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Knight implements Piece {
 
-    private final COLOR color;
     private static final int[][] possibleCombinations = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
+    private final COLOR color;
 
     public Knight(COLOR color) {
         this.color = color;

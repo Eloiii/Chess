@@ -3,6 +3,7 @@ package com.example.chess;
 import java.util.ArrayList;
 
 public class Game {
+    private static final Game INSTANCE = new Game();
     private final Board board;
     private int turnNumber;
     private COLOR turn;
@@ -13,8 +14,6 @@ public class Game {
         this.turn = COLOR.WHITE;
         this.pieceSelected = null;
     }
-
-    private static final Game INSTANCE = new Game();
 
     public static Game getInstance() {
         return INSTANCE;

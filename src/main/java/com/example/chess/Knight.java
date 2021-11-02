@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Knight implements Piece {
 
     private final COLOR color;
+    private static final int[][] possibleCombinations = {{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
 
     public Knight(COLOR color) {
         this.color = color;
@@ -12,7 +13,17 @@ public class Knight implements Piece {
 
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
-        return null;
+        ArrayList<Cell> results = new ArrayList<>();
+        for (int[] combination :
+                possibleCombinations) {
+            int rowTo = rowFrom + combination[0];
+            int colTo = colFrom + combination[1];
+            if (rowTo >= 0 && rowTo < BoardDimensions.MAX_ROW.getValue() && colTo >= 0 && colTo < BoardDimensions.MAX_COL.getValue()) {
+                Cell cell = new Cell(rowTo, colTo);
+                results.add(cell);
+            }
+        }
+        return results;
     }
 
     @Override

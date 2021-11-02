@@ -67,7 +67,7 @@ public class Board {
         setVoidPieces();
 //        setPieces(0, COLOR.BLACK);
 //        setPieces(7, COLOR.WHITE);
-        setPiece(1, 2, new Bishop(COLOR.WHITE));
+        setPiece(1, 2, new Knight(COLOR.WHITE));
         setPiece(0, 0, new Pawn(COLOR.BLACK));
 
     }

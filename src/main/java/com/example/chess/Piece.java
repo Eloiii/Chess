@@ -11,7 +11,7 @@ public interface Piece {
 
     COLOR getColor();
 
-    static boolean checkCell(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
+    static boolean cellIsNotVoid(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
         Piece piece = board.at(row, col).getPiece();
         if (!piece.isVoidPiece()) {
             if (piece.getColor() != color)

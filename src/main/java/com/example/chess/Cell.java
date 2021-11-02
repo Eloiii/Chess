@@ -33,7 +33,17 @@ public class Cell {
         return col;
     }
 
+    public int distanceFrom(Cell to) {
+        int diffRow = to.getRow() - this.getRow();
+        int diffCol = to.getCol() - this.getCol();
+        return Math.abs(Math.max(diffCol, diffRow));
+    }
+
     public boolean isEmptyCell() {
         return this.piece.isVoidPiece();
+    }
+
+    public String toString() {
+        return this.piece.toChar() + " at [" + this.row + "," + this.col + "]";
     }
 }

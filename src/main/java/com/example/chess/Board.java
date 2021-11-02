@@ -65,10 +65,8 @@ public class Board {
 
     public void initPieces() throws IllegalStateException {
         setVoidPieces();
-//        setPieces(0, COLOR.BLACK);
-//        setPieces(7, COLOR.WHITE);
-        setPiece(1, 2, new Knight(COLOR.WHITE));
-        setPiece(0, 0, new Pawn(COLOR.BLACK));
+        setPieces(0, COLOR.BLACK);
+        setPieces(7, COLOR.WHITE);
 
     }
 

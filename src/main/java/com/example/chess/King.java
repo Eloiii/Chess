@@ -12,7 +12,27 @@ public class King implements Piece {
 
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
-        return null;
+        ArrayList<Cell> results = new ArrayList<>();
+        if (rowFrom != BoardDimensions.MAX_ROW.getValue() - 1) {
+            Piece.cellIsNotVoid(rowFrom + 1, colFrom, board, results, this.color);
+            if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
+                Piece.cellIsNotVoid(rowFrom + 1, colFrom + 1, board, results, this.color);
+            if (colFrom != 0)
+                Piece.cellIsNotVoid(rowFrom + 1, colFrom - 1, board, results, this.color);
+        }
+        if (rowFrom != 0) {
+            Piece.cellIsNotVoid(rowFrom - 1, colFrom, board, results, this.color);
+            if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
+                Piece.cellIsNotVoid(rowFrom - 1, colFrom + 1, board, results, this.color);
+            if (colFrom != 0)
+                Piece.cellIsNotVoid(rowFrom - 1, colFrom - 1, board, results, this.color);
+        }
+        if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
+            Piece.cellIsNotVoid(rowFrom, colFrom + 1, board, results, this.color);
+        if (colFrom != 0)
+            Piece.cellIsNotVoid(rowFrom, colFrom - 1, board, results, this.color);
+
+        return results;
     }
 
     @Override

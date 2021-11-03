@@ -33,5 +33,6 @@ public class Launcher extends Application {
                 e.printStackTrace();
             }
         });
+        PGNReader.readPGN("D:/Code/Chess/src/main/java/com/example/chess/pgn.txt");
     }
 }

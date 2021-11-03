@@ -7,10 +7,10 @@ public interface Piece {
         Piece piece = board.at(row, col).getPiece();
         if (!piece.isVoidPiece()) {
             if (piece.getColor() != color)
-                results.add(new Cell(row, col));
+                results.add(board.at(row, col));
             return true;
         }
-        results.add(new Cell(row, col));
+        results.add(board.at(row, col));
         return false;
     }
 

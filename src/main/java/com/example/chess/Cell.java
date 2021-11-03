@@ -1,5 +1,7 @@
 package com.example.chess;
 
+import java.util.ArrayList;
+
 public class Cell {
     private final int row;
     private final int col;
@@ -45,5 +47,9 @@ public class Cell {
 
     public String toString() {
         return this.piece.toChar() + " at [" + this.row + "," + this.col + "]";
+    }
+
+    public ArrayList<Cell> getLegalMovesForPiece(Board board) {
+        return this.piece.getLegalMoves(this.row, this.col, board);
     }
 }

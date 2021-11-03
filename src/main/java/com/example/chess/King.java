@@ -6,6 +6,7 @@ public class King implements Piece {
 
     private final COLOR color;
     private boolean isCheck;
+    public Cell cellPerformsCheck;
 
     public King(COLOR color) {
         this.color = color;
@@ -53,10 +54,14 @@ public class King implements Piece {
     }
 
     public boolean isCheck() {
-        return isCheck;
+        return this.isCheck;
     }
 
-    public void setCheck(boolean check) {
-        isCheck = check;
+    public void setCheck(boolean check, Cell piece) {
+        this.isCheck = check;
+        if (!check)
+            this.cellPerformsCheck = null;
+        else
+            this.cellPerformsCheck = piece;
     }
 }

@@ -120,7 +120,7 @@ public class Board {
         }
     }
 
-    public Cell getPiece(Piece piece, COLOR color) {
+    public Cell getCellByPiece(Piece piece, COLOR color) {
         for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
             for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
                 Piece pieceFor = this.at(row, col).getPiece();

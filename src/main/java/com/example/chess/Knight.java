@@ -19,7 +19,7 @@ public class Knight implements Piece {
             int rowTo = rowFrom + combination[0];
             int colTo = colFrom + combination[1];
             if (rowTo >= 0 && rowTo < BoardDimensions.MAX_ROW.getValue() && colTo >= 0 && colTo < BoardDimensions.MAX_COL.getValue()) {
-                Cell cell = new Cell(rowTo, colTo);
+                Cell cell = board.at(rowTo, colTo);
                 results.add(cell);
             }
         }

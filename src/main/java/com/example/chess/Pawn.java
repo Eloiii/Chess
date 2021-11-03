@@ -18,12 +18,12 @@ public class Pawn implements Piece {
         int shiftSingle = this.color == COLOR.BLACK ? 1 : -1;
         Piece piece = board.at(rowFrom + shiftSingle, colFrom).getPiece();
         if (piece.isVoidPiece()) {
-            results.add(new Cell(rowFrom + shiftSingle, colFrom));
+            results.add(board.at(rowFrom + shiftSingle, colFrom));
             if (rowFrom == 1 || rowFrom == 6) {
                 int shiftDouble = this.color == COLOR.BLACK ? 2 : -2;
                 piece = board.at(rowFrom + shiftDouble, colFrom).getPiece();
                 if (piece.isVoidPiece())
-                    results.add(new Cell(rowFrom + shiftDouble, colFrom));
+                    results.add(board.at(rowFrom + shiftDouble, colFrom));
             }
         }
 
@@ -31,12 +31,12 @@ public class Pawn implements Piece {
         if (colFrom != 7) {
             Piece pieceDiagonalRight = board.at(rowFrom + shiftSingle, colFrom + 1).getPiece();
             if (!pieceDiagonalRight.isVoidPiece() && pieceDiagonalRight.getColor() != this.color)
-                results.add(new Cell(rowFrom + shiftSingle, colFrom + 1));
+                results.add(board.at(rowFrom + shiftSingle, colFrom + 1));
         }
         if (colFrom != 0) {
             Piece pieceDiagonalLeft = board.at(rowFrom + shiftSingle, colFrom - 1).getPiece();
             if (!pieceDiagonalLeft.isVoidPiece() && pieceDiagonalLeft.getColor() != this.color)
-                results.add(new Cell(rowFrom + shiftSingle, colFrom - 1));
+                results.add(board.at(rowFrom + shiftSingle, colFrom - 1));
         }
 
         return results;

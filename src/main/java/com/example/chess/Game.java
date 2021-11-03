@@ -40,9 +40,9 @@ public class Game {
 
         if (this.cellSelected == null || this.cellSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor()) {
             this.cellSelected = this.board.at(row, col);
-            colorPossibleMoves(row, col, controller);
             checkWrongColorSelected();
             checkPieceMovedWhenCheck();
+            colorPossibleMoves(row, col, controller);
         } else {
             makeAMove(row, col, controller);
         }
@@ -73,9 +73,11 @@ public class Game {
             Piece piece = this.board.at(move.getRow(), move.getCol()).getPiece();
             if (piece instanceof King) {
                 ((King) piece).setCheck(true);
-                break;
+                return;
             }
         }
+        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        ((King) board.getPiece(new King(color), color).getPiece()).setCheck(false);
     }
 
     private void makeAMove(int row, int col, WindowController controller) throws IllegalMoveException {

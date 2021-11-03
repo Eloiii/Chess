@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class King implements Piece {
 
     private final COLOR color;
+    private boolean isCheck;
 
     public King(COLOR color) {
         this.color = color;
+        this.isCheck = false;
     }
 
     @Override
@@ -48,5 +50,13 @@ public class King implements Piece {
     @Override
     public COLOR getColor() {
         return this.color;
+    }
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
     }
 }

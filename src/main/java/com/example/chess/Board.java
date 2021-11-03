@@ -119,4 +119,15 @@ public class Board {
             System.out.println();
         }
     }
+
+    public Cell getPiece(Piece piece, COLOR color) {
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+                Piece pieceFor = this.at(row, col).getPiece();
+                if (pieceFor.getClass() == piece.getClass() && pieceFor.getColor() == color)
+                    return this.at(row, col);
+            }
+        }
+        return null;
+    }
 }

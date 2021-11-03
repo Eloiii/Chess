@@ -42,7 +42,7 @@ public class WindowController {
         pane.setOnMouseClicked(e -> {
             try {
                 Game.getInstance().selectPiece(rowIndex, colIndex, this);
-            } catch (IllegalMoveException ex) {
+            } catch (IllegalMoveException | CheckException ex) {
                 ex.printStackTrace();
             }
         });
@@ -89,7 +89,7 @@ public class WindowController {
                     setImage(pane, "Knight_White.png");
                 break;
             default:
-                System.err.println("INITALISATION PIECE INCONNUE");
+
         }
         grid.add(pane, colIndex, rowIndex);
     }

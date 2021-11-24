@@ -17,24 +17,25 @@ public class WindowController {
 
     public void initialize() {
         Board board = Board.getInstance();
-
-        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-            for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
-                addPane(i, j, board);
+        Platform.runLater(() -> {
+            for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+                for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
+                    addPane(i, j, board);
+                }
             }
-        }
 
-        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-            ColumnConstraints colConstraints = new ColumnConstraints();
-            colConstraints.setHgrow(Priority.ALWAYS);
-            grid.getColumnConstraints().add(colConstraints);
-        }
+            for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+                ColumnConstraints colConstraints = new ColumnConstraints();
+                colConstraints.setHgrow(Priority.ALWAYS);
+                grid.getColumnConstraints().add(colConstraints);
+            }
 
-        for (int i = 0; i < BoardDimensions.MAX_ROW.getValue(); i++) {
-            RowConstraints rowConstraints = new RowConstraints();
-            rowConstraints.setVgrow(Priority.ALWAYS);
-            grid.getRowConstraints().add(rowConstraints);
-        }
+            for (int i = 0; i < BoardDimensions.MAX_ROW.getValue(); i++) {
+                RowConstraints rowConstraints = new RowConstraints();
+                rowConstraints.setVgrow(Priority.ALWAYS);
+                grid.getRowConstraints().add(rowConstraints);
+            }
+        });
     }
 
     private void addPane(int colIndex, int rowIndex, Board board) {

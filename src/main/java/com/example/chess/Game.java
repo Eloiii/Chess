@@ -81,7 +81,7 @@ public class Game {
             int x = (int) Math.round(cellPerformsCheck.getRow() + interval_X * i);
             int y = (int) Math.round(cellPerformsCheck.getCol() + interval_Y * i);
             Cell cell = this.board.at(x, y);
-            if (destination == cell) return true;
+            if (destination == cell && !(cellSelected.getPiece() instanceof King)) return true;
         }
         return false;
     }

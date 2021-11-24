@@ -35,43 +35,49 @@ public class Game {
         return board;
     }
 
-    public void selectPiece(int row, int col, WindowController controller) throws IllegalMoveException, CheckException {
+    public void selectCase(int row, int col, WindowController controller) throws IllegalMoveException, CheckException {
         controller.resetColors(this.board);
-
+        ArrayList<Cell> possibleMoves;
         if (this.cellSelected == null || this.cellSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor()) {
             this.cellSelected = this.board.at(row, col);
             checkWrongColorSelected();
-            ArrayList<Cell> move = checkPieceMovedWhenCheck();
-            colorPossibleMoves(move, controller);
+            possibleMoves = getPossibleMoves();
+            colorPossibleMoves(possibleMoves, controller);
         } else {
             makeAMove(row, col, controller);
         }
     }
 
-    private ArrayList<Cell> checkPieceMovedWhenCheck() throws CheckException {
-        ArrayList<Cell> res = new ArrayList<>();
+    private ArrayList<Cell> getPossibleMoves() throws CheckException {
+        ArrayList<Cell> possibleMoves;
         Cell king = board.getCellByPiece(new King(this.turn), this.turn);
-        if (((King) king.getPiece()).isCheck()) {
-
-            ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
-            for (Cell move :
-                    possibleMoves) {
-                if (moveCanPreventCheck(move, king)) res.add(move);
-            }
-            if (res.isEmpty()) {
-                this.cellSelected = null;
-                throw new CheckException("King is check");
-            } else
-                return res;
+        if (((King) king.getPiece()).isCheck())
+            possibleMoves = getSelectedPieceMovesPreventingCheck(king);
+        else {
+            possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
+            possibleMoves.removeIf(this::doesMoveDoDiscoveryCheck);
         }
-        return null;
+        return possibleMoves;
     }
 
-    private boolean moveCanPreventCheck(Cell destination, Cell king) {
+    private ArrayList<Cell> getSelectedPieceMovesPreventingCheck(Cell kingPosition) throws CheckException {
+        ArrayList<Cell> res = new ArrayList<>();
+        ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
+        for (Cell move :
+                possibleMoves) {
+            if (doesMoveCanPreventCheck(move, kingPosition)) res.add(move);
+        }
+        if (res.isEmpty()) {
+            this.cellSelected = null;
+            throw new CheckException("King is check");
+        } else
+            return res;
+    }
+
+    private boolean doesMoveCanPreventCheck(Cell destination, Cell king) {
         Cell cellPerformsCheck = ((King) king.getPiece()).cellPerformsCheck;
         if (destination == cellPerformsCheck)
             return true;
-
         int diff_X = king.getRow() - cellPerformsCheck.getRow();
         int diff_Y = king.getCol() - cellPerformsCheck.getCol();
         int distance = king.distanceFrom(cellPerformsCheck);
@@ -92,19 +98,11 @@ public class Game {
     }
 
     private void colorPossibleMoves(ArrayList<Cell> moves, WindowController controller) {
-        if (moves != null) {
-            for (Cell move : moves)
-                controller.colorCell(move, "red");
-        } else {
-            ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
-            for (Cell move1 : possibleMoves) {
-                controller.colorCell(move1, "red");
-            }
-        }
-
+        for (Cell move : moves)
+            controller.colorCell(move, "red");
     }
 
-    private void checkKingCheck(Cell source) {
+    private void checkAndSetIfKingChecked(Cell source) { //TODO LA PAS BON BIZARRE
         ArrayList<Cell> possibleMoves = source.getLegalMovesForPiece(this.board);
         for (Cell move :
                 possibleMoves) {
@@ -114,15 +112,32 @@ public class Game {
                 return;
             }
         }
-        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK; //TODO CHANGE LE TOUR ??
         ((King) board.getCellByPiece(new King(color), color).getPiece()).setCheck(false, null);
+    }
+
+    private boolean doesMoveDoDiscoveryCheck(Cell destination) {
+        this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), new VoidPiece()); // simule piece pas là
+        ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
+        for (Cell cell:
+             allCellsForOppositColor) {
+            checkAndSetIfKingChecked(cell); //TODO VOIR METHODE BIZARRE
+        }
+        King king = (King) board.getCellByPiece(new King(this.turn), this.turn).getPiece();
+        if(king.isCheck()) {
+            king.setCheck(false, null);
+            return true;
+        }
+        return false;
+
+
     }
 
     private void makeAMove(int row, int col, WindowController controller) throws IllegalMoveException {
         this.board.move(this.cellSelected, row, col);
         controller.moveImages(this.cellSelected, row, col);
         Cell destination = this.board.at(row, col);
-        checkKingCheck(destination);
+        checkAndSetIfKingChecked(destination);
         this.cellSelected = null;
         this.nextTurn();
         this.changeTurn();

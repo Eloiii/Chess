@@ -25,13 +25,13 @@ public class Board {
         if (isALegalMove(from, rowTo, colTo)) {
             this.setPiece(from.getRow(), from.getCol(), new VoidPiece());
             this.setPiece(rowTo, colTo, from.getPiece());
-            System.out.println(getMove(from, rowTo, colTo));
+            System.out.println(moveToString(from, rowTo, colTo));
             return true;
         } else
             throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + rowTo + "," + colTo);
     }
 
-    private String getMove(Cell from, int rowTo, int colTo) {
+    private String moveToString(Cell from, int rowTo, int colTo) {
         char a = 'a';
         String letterTo = Character.toString(a + colTo);
         String numTo = String.valueOf(8 - rowTo);
@@ -129,5 +129,17 @@ public class Board {
             }
         }
         return null;
+    }
+
+    public ArrayList<Cell> getAllCellsForColor(COLOR color) {
+        ArrayList<Cell> res = new ArrayList<>();
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+                Cell cell = this.at(row, col);
+                if(cell.getPiece().getColor() == color)
+                    res.add(cell);
+            }
+        }
+        return res;
     }
 }

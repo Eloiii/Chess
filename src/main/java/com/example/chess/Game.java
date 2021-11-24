@@ -74,6 +74,7 @@ public class Game {
             return res;
     }
 
+    //TODO Fix bad calculated moves to prenvent check
     private boolean doesMoveCanPreventCheck(Cell destination, Cell king) {
         Cell cellPerformsCheck = ((King) king.getPiece()).cellPerformsCheck;
         if (destination == cellPerformsCheck)
@@ -117,6 +118,7 @@ public class Game {
     }
 
     private boolean doesMoveDoDiscoveryCheck(Cell destination) {
+        boolean res = false;
         this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), new VoidPiece()); // simule piece pas là
         ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
         for (Cell cell:
@@ -126,9 +128,10 @@ public class Game {
         King king = (King) board.getCellByPiece(new King(this.turn), this.turn).getPiece();
         if(king.isCheck()) {
             king.setCheck(false, null);
-            return true;
+            res = true;
         }
-        return false;
+        this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), this.cellSelected.getPiece());
+        return res;
 
 
     }

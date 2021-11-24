@@ -102,7 +102,7 @@ public class Game {
             controller.colorCell(move, "red");
     }
 
-    private void checkAndSetIfKingChecked(Cell source) { //TODO LA PAS BON BIZARRE
+    private void checkAndSetIfKingChecked(Cell source) {
         ArrayList<Cell> possibleMoves = source.getLegalMovesForPiece(this.board);
         for (Cell move :
                 possibleMoves) {
@@ -112,7 +112,7 @@ public class Game {
                 return;
             }
         }
-        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK; //TODO CHANGE LE TOUR ??
+        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
         ((King) board.getCellByPiece(new King(color), color).getPiece()).setCheck(false, null);
     }
 
@@ -121,7 +121,7 @@ public class Game {
         ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
         for (Cell cell:
              allCellsForOppositColor) {
-            checkAndSetIfKingChecked(cell); //TODO VOIR METHODE BIZARRE
+            checkAndSetIfKingChecked(cell);
         }
         King king = (King) board.getCellByPiece(new King(this.turn), this.turn).getPiece();
         if(king.isCheck()) {

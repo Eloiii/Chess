@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
-import java.net.URL;
+import java.util.Objects;
 
 public class WindowController {
 
@@ -17,25 +17,23 @@ public class WindowController {
 
     public void initialize() {
         Board board = Board.getInstance();
-        Platform.runLater(() -> {
-            for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-                for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
-                    addPane(i, j, board);
-                }
+        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+            for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
+                addPane(i, j, board);
             }
+        }
 
-            for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-                ColumnConstraints colConstraints = new ColumnConstraints();
-                colConstraints.setHgrow(Priority.ALWAYS);
-                grid.getColumnConstraints().add(colConstraints);
-            }
+        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints();
+            colConstraints.setHgrow(Priority.ALWAYS);
+            grid.getColumnConstraints().add(colConstraints);
+        }
 
-            for (int i = 0; i < BoardDimensions.MAX_ROW.getValue(); i++) {
-                RowConstraints rowConstraints = new RowConstraints();
-                rowConstraints.setVgrow(Priority.ALWAYS);
-                grid.getRowConstraints().add(rowConstraints);
-            }
-        });
+        for (int i = 0; i < BoardDimensions.MAX_ROW.getValue(); i++) {
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setVgrow(Priority.ALWAYS);
+            grid.getRowConstraints().add(rowConstraints);
+        }
     }
 
     private void addPane(int colIndex, int rowIndex, Board board) {
@@ -96,16 +94,11 @@ public class WindowController {
     }
 
     private void setImage(Pane pane, String img) {
-        URL input = WindowController.class.getResource(img);
-        assert input != null;
-        Image image = new Image(input.toString());
-        ImageView imageView = new ImageView(image);
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(img))));
+        imageView.setCache(true);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(100);
-        if (pane.getChildren().size() >= 1)
-            pane.getChildren().set(0, imageView);
-        else
-            pane.getChildren().add(imageView);
+        setImage(pane, imageView);
     }
 
     private void setImage(Pane pane, ImageView img) {

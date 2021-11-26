@@ -40,7 +40,7 @@ public class WindowController {
         Pane pane = new Pane();
         pane.setOnMouseClicked(e -> {
             try {
-                Game.getInstance().selectCase(rowIndex, colIndex, this);
+                Game.getInstance().selectCell(rowIndex, colIndex, this);
             } catch (IllegalMoveException | CheckException ex) {
                 ex.printStackTrace();
             }

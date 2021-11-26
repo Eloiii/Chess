@@ -63,34 +63,38 @@ public class Game {
     private ArrayList<Cell> getSelectedPieceMovesPreventingCheck(Cell kingPosition) throws CheckException {
         ArrayList<Cell> res = new ArrayList<>();
         ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
+        Cell cellPerformingCheck = ((King) kingPosition.getPiece()).cellPerformsCheck;
+        ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
         for (Cell move :
                 possibleMoves) {
-            if (doesMoveCanPreventCheck(move, kingPosition)) res.add(move);
+            if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck) res.add(move);
         }
         if (res.isEmpty()) {
-            this.cellSelected = null;
-            throw new CheckException("King is check");
+            try {
+                throw new CheckException("King is check and " + this.cellSelected.toString() + " cannot prevent it");
+            } finally {
+                this.cellSelected = null;
+            }
         } else
             return res;
     }
 
-    //TODO Fix bad calculated moves to prenvent check
-    private boolean doesMoveCanPreventCheck(Cell destination, Cell king) {
-        Cell cellPerformsCheck = ((King) king.getPiece()).cellPerformsCheck;
-        if (destination == cellPerformsCheck)
-            return true;
-        int diff_X = king.getRow() - cellPerformsCheck.getRow();
-        int diff_Y = king.getCol() - cellPerformsCheck.getCol();
-        int distance = king.distanceFrom(cellPerformsCheck);
+    private ArrayList<Cell> getCellsPreventingCheck(Cell king, Cell cellPerformingCheck) {
+        ArrayList<Cell> cellsPreventingCheck = new ArrayList<>();
+        int diff_X = king.getRow() - cellPerformingCheck.getRow();
+        int diff_Y = king.getCol() - cellPerformingCheck.getCol();
+        int distance = king.distanceFrom(cellPerformingCheck);
+        if (distance == 1)
+            return cellsPreventingCheck;
         double interval_X = diff_X / (distance + 1f);
         double interval_Y = diff_Y / (distance + 1f);
         for (int i = 1; i < 3; i++) {
-            int x = (int) Math.round(cellPerformsCheck.getRow() + interval_X * i);
-            int y = (int) Math.round(cellPerformsCheck.getCol() + interval_Y * i);
+            int x = (int) Math.round(cellPerformingCheck.getRow() + interval_X * i);
+            int y = (int) Math.round(cellPerformingCheck.getCol() + interval_Y * i);
             Cell cell = this.board.at(x, y);
-            if (destination == cell && !(cellSelected.getPiece() instanceof King)) return true;
+            cellsPreventingCheck.add(cell);
         }
-        return false;
+        return cellsPreventingCheck;
     }
 
     private void checkWrongColorSelected() throws IllegalMoveException {
@@ -121,12 +125,12 @@ public class Game {
         boolean res = false;
         this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), new VoidPiece()); // simule piece pas là
         ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
-        for (Cell cell:
-             allCellsForOppositColor) {
+        for (Cell cell :
+                allCellsForOppositColor) {
             checkAndSetIfKingChecked(cell);
         }
         King king = (King) board.getCellByPiece(new King(this.turn), this.turn).getPiece();
-        if(king.isCheck()) {
+        if (king.isCheck()) {
             king.setCheck(false, null);
             res = true;
         }

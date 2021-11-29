@@ -112,7 +112,8 @@ public class Game {
             possibleMoves = getSelectedPieceMovesPreventingCheck(king);
         else {
             possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
-            possibleMoves.removeIf(this::moveCreatesCheck);
+            if (!(this.cellSelected.getPiece() instanceof King))
+                possibleMoves.removeIf(this::moveCreatesCheck);
         }
         return possibleMoves;
     }
@@ -125,6 +126,7 @@ public class Game {
      * @throws CheckException catch if the selected piece cannot prevent the check
      */
     private ArrayList<Cell> getSelectedPieceMovesPreventingCheck(Cell kingPosition) throws CheckException {
+        //TODO Special case for king to do here
         ArrayList<Cell> res = new ArrayList<>();
         ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
         Cell cellPerformingCheck = ((King) kingPosition.getPiece()).cellPerformsCheck;

@@ -130,10 +130,17 @@ public class Game {
         ArrayList<Cell> res = new ArrayList<>();
         ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
         Cell cellPerformingCheck = ((King) kingPosition.getPiece()).cellPerformsCheck;
-        ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
-        for (Cell move :
-                possibleMoves) {
-            if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck) res.add(move);
+        if (this.cellSelected.getPiece() instanceof King) {
+            for (Cell move : possibleMoves) {
+                if (kingCanMoveTo(move))
+                    res.add(move);
+            }
+        } else {
+            ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
+            for (Cell move :
+                    possibleMoves) {
+                if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck) res.add(move);
+            }
         }
         if (res.isEmpty()) {
             try {
@@ -143,6 +150,25 @@ public class Game {
             }
         } else
             return res;
+    }
+
+    private boolean kingCanMoveTo(Cell move) {
+        ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
+        ArrayList<Cell> everyMoveForAllPieces = new ArrayList<>();
+        for (Cell cell :
+                allCellsForOppositColor) {
+            ArrayList<Cell> legalMovesForCell = cell.getLegalMovesForPiece(board);
+            if(cell.getPiece() instanceof Pawn) {
+                for(Cell pawnMove : legalMovesForCell) {
+                    if(pawnMove.getCol() != cell.getCol()) {
+                        everyMoveForAllPieces.add(pawnMove);
+                    }
+                }
+            }
+            else
+                everyMoveForAllPieces.addAll(legalMovesForCell);
+        }
+        return !everyMoveForAllPieces.contains(move);
     }
 
     //TODO still bug
@@ -258,7 +284,7 @@ public class Game {
     /**
      * Check if checkmate
      *
-     * @return
+     * @return true if checkmate, false if game is still running
      */
     public boolean gameOver() {
         return false;

@@ -16,19 +16,19 @@ public class Rook implements Piece {
 
         // Bas
         for (int rowFor = rowFrom + 1; rowFor < BoardDimensions.MAX_ROW.getValue(); rowFor++) {
-            if (Piece.addIfLegalCell(rowFor, colFrom, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFor, colFrom, board, results, this.color)) break;
         }
         // Haut
         for (int rowFor = rowFrom - 1; rowFor > -1; rowFor--) {
-            if (Piece.addIfLegalCell(rowFor, colFrom, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFor, colFrom, board, results, this.color)) break;
         }
         //Droite
         for (int colFor = colFrom + 1; colFor < BoardDimensions.MAX_COL.getValue(); colFor++) {
-            if (Piece.addIfLegalCell(rowFrom, colFor, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFrom, colFor, board, results, this.color)) break;
         }
         //Gauche
         for (int colFor = colFrom - 1; colFor > -1; colFor--) {
-            if (Piece.addIfLegalCell(rowFrom, colFor, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFrom, colFor, board, results, this.color)) break;
         }
         return results;
     }

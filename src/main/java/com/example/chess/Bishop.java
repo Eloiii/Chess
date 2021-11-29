@@ -35,7 +35,7 @@ public class Bishop implements Piece {
         stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
         if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {
             for (int index = rowFrom + 1; index < rowFrom + stop; index++) {
-                if (Piece.addIfLegalCell(index, colFrom + (index - rowFrom), board, results, this.color)) break;
+                if (Piece.addIfLegalDestination(index, colFrom + (index - rowFrom), board, results, this.color)) break;
             }
         }
 
@@ -51,7 +51,7 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalCell(rowFrom - (index + 1), colFrom - index - 1, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFrom - (index + 1), colFrom - index - 1, board, results, this.color)) break;
         }
 
 
@@ -66,7 +66,7 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalCell(rowFrom + index + 1, colFrom - index - 1, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFrom + index + 1, colFrom - index - 1, board, results, this.color)) break;
         }
 
 
@@ -81,7 +81,7 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalCell(rowFrom - (index + 1), colFrom + index + 1, board, results, this.color)) break;
+            if (Piece.addIfLegalDestination(rowFrom - (index + 1), colFrom + index + 1, board, results, this.color)) break;
         }
 
         return results;

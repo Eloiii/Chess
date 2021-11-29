@@ -16,7 +16,7 @@ public interface Piece {
      * @param color   color of the piece
      * @return true if the move is legal, false if the move is illegal
      */
-    static boolean addIfLegalCell(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
+    static boolean addIfLegalDestination(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
         Piece piece = board.at(row, col).getPiece();
         if (!piece.isVoidPiece()) {
             if (piece.getColor() != color)

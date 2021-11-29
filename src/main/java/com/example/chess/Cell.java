@@ -110,4 +110,11 @@ public class Cell {
     public ArrayList<Cell> getLegalMovesForPiece(Board board) {
         return this.piece.getLegalMoves(this.row, this.col, board);
     }
+
+    boolean isProtected() {
+        Board board = Board.getInstance();
+        ArrayList<Cell> allPiecesSameColor = board.getAllCellsForColor(this.piece.getColor());
+        //TODO chercher dans les coups possibles de chaque pieces si this est dedans (lol pas possible glhf)
+        return false;
+    }
 }

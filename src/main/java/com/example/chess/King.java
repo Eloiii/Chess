@@ -17,23 +17,23 @@ public class King implements Piece {
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
         ArrayList<Cell> results = new ArrayList<>();
         if (rowFrom != BoardDimensions.MAX_ROW.getValue() - 1) {
-            Piece.addIfLegalCell(rowFrom + 1, colFrom, board, results, this.color);
+            Piece.addIfLegalDestination(rowFrom + 1, colFrom, board, results, this.color);
             if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-                Piece.addIfLegalCell(rowFrom + 1, colFrom + 1, board, results, this.color);
+                Piece.addIfLegalDestination(rowFrom + 1, colFrom + 1, board, results, this.color);
             if (colFrom != 0)
-                Piece.addIfLegalCell(rowFrom + 1, colFrom - 1, board, results, this.color);
+                Piece.addIfLegalDestination(rowFrom + 1, colFrom - 1, board, results, this.color);
         }
         if (rowFrom != 0) {
-            Piece.addIfLegalCell(rowFrom - 1, colFrom, board, results, this.color);
+            Piece.addIfLegalDestination(rowFrom - 1, colFrom, board, results, this.color);
             if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-                Piece.addIfLegalCell(rowFrom - 1, colFrom + 1, board, results, this.color);
+                Piece.addIfLegalDestination(rowFrom - 1, colFrom + 1, board, results, this.color);
             if (colFrom != 0)
-                Piece.addIfLegalCell(rowFrom - 1, colFrom - 1, board, results, this.color);
+                Piece.addIfLegalDestination(rowFrom - 1, colFrom - 1, board, results, this.color);
         }
         if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-            Piece.addIfLegalCell(rowFrom, colFrom + 1, board, results, this.color);
+            Piece.addIfLegalDestination(rowFrom, colFrom + 1, board, results, this.color);
         if (colFrom != 0)
-            Piece.addIfLegalCell(rowFrom, colFrom - 1, board, results, this.color);
+            Piece.addIfLegalDestination(rowFrom, colFrom - 1, board, results, this.color);
 
         return results;
     }

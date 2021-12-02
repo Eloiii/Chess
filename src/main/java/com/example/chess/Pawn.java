@@ -14,41 +14,50 @@ public class Pawn implements Piece {
         this.color = color;
     }
 
-
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
+        this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
+
+
+    public ArrayList<Cell> getBasicMoves(int row, int col) {
         Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
 
         int shiftSingle = this.color == COLOR.BLACK ? 1 : -1;
-        Piece piece = board.at(rowFrom + shiftSingle, colFrom).getPiece();
+        Piece piece = board.at(row + shiftSingle, col).getPiece();
         if (piece.isVoidPiece()) {
-            results.add(board.at(rowFrom + shiftSingle, colFrom));
-            if (rowFrom == 1 || rowFrom == 6) {
+            results.add(board.at(row + shiftSingle, col));
+            if (row == 1 || row == 6) {
                 int shiftDouble = this.color == COLOR.BLACK ? 2 : -2;
-                piece = board.at(rowFrom + shiftDouble, colFrom).getPiece();
+                piece = board.at(row + shiftDouble, col).getPiece();
                 if (piece.isVoidPiece())
-                    results.add(board.at(rowFrom + shiftDouble, colFrom));
+                    results.add(board.at(row + shiftDouble, col));
             }
         }
 
 
-        if (colFrom != 7) {
-            Cell cell = board.at(rowFrom + shiftSingle, colFrom + 1);
+        if (col != 7) {
+            Cell cell = board.at(row + shiftSingle, col + 1);
             Piece pieceDiagonalRight = cell.getPiece();
             if (!pieceDiagonalRight.isVoidPiece()) {
-                if(pieceDiagonalRight.getColor() != this.color)
+                if (pieceDiagonalRight.getColor() != this.color)
                     results.add(cell);
                 else
                     this.protectedCells.add(cell);
             }
         }
-        if (colFrom != 0) {
-            Cell cell = board.at(rowFrom + shiftSingle, colFrom - 1);
+        if (col != 0) {
+            Cell cell = board.at(row + shiftSingle, col - 1);
             Piece pieceDiagonalLeft = cell.getPiece();
             if (!pieceDiagonalLeft.isVoidPiece()) {
-                if(pieceDiagonalLeft.getColor() != this.color)
+                if (pieceDiagonalLeft.getColor() != this.color)
                     results.add(cell);
                 else
                     this.protectedCells.add(cell);
@@ -79,5 +88,10 @@ public class Pawn implements Piece {
     @Override
     public ArrayList<Cell> getProtectedCells() {
         return this.protectedCells;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return false;
     }
 }

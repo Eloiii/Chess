@@ -25,31 +25,32 @@ public class Bishop implements Piece {
      * Get legals moves for the bishop :
      * The bishop moves diagonally for an unlimited distance until it reaches another piece or the end of the board
      *
-     * @param rowFrom the row of the piece
-     * @param colFrom the col of the piece
+     * @param row the row of the piece
+     * @param col the col of the piece
      * @return legal moves of the bishop
      */
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
-        Board board = Board.getInstance();
-        ArrayList<Cell> legalMoves = new ArrayList<>();
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
         this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
 
-        getBottomRightDiagonalMoves(rowFrom, colFrom, legalMoves);
-        getTopLeftDiagonalMoves(rowFrom, colFrom, board, legalMoves);
-        getBottomLeftDiagonalMoves(rowFrom, colFrom, board, legalMoves);
-        getTopRightDiagonalMoves(rowFrom, colFrom, board, legalMoves);
+    public boolean isPinned() {
+        return false;
+    }
 
-//        if(check)  { // if my king is check
-////            ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
-//            for (Cell move :
-//                    legalMoves) {
-//                if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck)
-//                    res.add(move);
-//            }
-//        }
-
-        return legalMoves;
+    private ArrayList<Cell> getBasicMoves(int row, int col) {
+        Board board = Board.getInstance();
+        ArrayList<Cell> results = new ArrayList<>();
+        getBottomRightDiagonalMoves(row, col, results);
+        getTopLeftDiagonalMoves(row, col, board, results);
+        getBottomLeftDiagonalMoves(row, col, board, results);
+        getTopRightDiagonalMoves(row, col, board, results);
+        return results;
     }
 
     private void getTopRightDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
@@ -68,7 +69,8 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom + index + 1, results, protectedCells, this.color)) break;
+            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom + index + 1, results, protectedCells, this.color))
+                break;
         }
     }
 
@@ -88,7 +90,8 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addMoveAndTestEmptyCell(rowFrom + index + 1, colFrom - index - 1, results, protectedCells, this.color)) break;
+            if (Piece.addMoveAndTestEmptyCell(rowFrom + index + 1, colFrom - index - 1, results, protectedCells, this.color))
+                break;
         }
     }
 
@@ -108,7 +111,8 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom - index - 1, results, protectedCells, this.color)) break;
+            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom - index - 1, results, protectedCells, this.color))
+                break;
         }
     }
 
@@ -118,7 +122,8 @@ public class Bishop implements Piece {
         stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
         if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {
             for (int index = rowFrom + 1; index < rowFrom + stop; index++) {
-                if (Piece.addMoveAndTestEmptyCell(index, colFrom + (index - rowFrom), results, protectedCells, this.color)) break;
+                if (Piece.addMoveAndTestEmptyCell(index, colFrom + (index - rowFrom), results, protectedCells, this.color))
+                    break;
             }
         }
     }

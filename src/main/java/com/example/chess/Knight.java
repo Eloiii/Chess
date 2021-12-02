@@ -16,13 +16,22 @@ public class Knight implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
+        this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
+
+    public ArrayList<Cell> getBasicMoves(int row, int col) {
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
         for (int[] combination :
                 possibleCombinations) {
-            int rowTo = rowFrom + combination[0];
-            int colTo = colFrom + combination[1];
+            int rowTo = row + combination[0];
+            int colTo = col + combination[1];
             if (rowTo >= 0 && rowTo < BoardDimensions.MAX_ROW.getValue() && colTo >= 0 && colTo < BoardDimensions.MAX_COL.getValue()) {
                 Piece.addMoveAndTestEmptyCell(rowTo, colTo, results, protectedCells, this.color);
             }
@@ -51,5 +60,10 @@ public class Knight implements Piece {
     @Override
     public ArrayList<Cell> getProtectedCells() {
         return this.protectedCells;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return false;
     }
 }

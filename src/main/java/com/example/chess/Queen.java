@@ -15,11 +15,20 @@ public class Queen implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
+        this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
+
+    public ArrayList<Cell> getBasicMoves(int row, int col) {
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
-        getBishopMovementsAndProtectedCells(rowFrom, colFrom, results);
-        getRookMovementsAndProtectedCells(rowFrom, colFrom, results);
+        getBishopMovementsAndProtectedCells(row, col, results);
+        getRookMovementsAndProtectedCells(row, col, results);
         return results;
     }
 
@@ -58,5 +67,10 @@ public class Queen implements Piece {
     @Override
     public ArrayList<Cell> getProtectedCells() {
         return this.protectedCells;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return false;
     }
 }

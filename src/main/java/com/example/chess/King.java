@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class King implements Piece {
 
     private final COLOR color;
-    public Cell cellPerformsCheck;
+    public Cell cellPerformingCheck;
     private boolean isCheck;
 
     /**
@@ -19,27 +19,37 @@ public class King implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
+        //TODO CHECK KING DO NOT PUT ITSELF IN CHECK
+        this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
+
+    public ArrayList<Cell> getBasicMoves(int row, int col) {
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
-        if (rowFrom != BoardDimensions.MAX_ROW.getValue() - 1) {
-            Piece.addMoveAndTestEmptyCell(rowFrom + 1, colFrom, results, protectedCells, this.color);
-            if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-                Piece.addMoveAndTestEmptyCell(rowFrom + 1, colFrom + 1, results, protectedCells, this.color);
-            if (colFrom != 0)
-                Piece.addMoveAndTestEmptyCell(rowFrom + 1, colFrom - 1, results, protectedCells, this.color);
+        if (row != BoardDimensions.MAX_ROW.getValue() - 1) {
+            Piece.addMoveAndTestEmptyCell(row + 1, col, results, protectedCells, this.color);
+            if (col != BoardDimensions.MAX_COL.getValue() - 1)
+                Piece.addMoveAndTestEmptyCell(row + 1, col + 1, results, protectedCells, this.color);
+            if (col != 0)
+                Piece.addMoveAndTestEmptyCell(row + 1, col - 1, results, protectedCells, this.color);
         }
-        if (rowFrom != 0) {
-            Piece.addMoveAndTestEmptyCell(rowFrom - 1, colFrom, results, protectedCells, this.color);
-            if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-                Piece.addMoveAndTestEmptyCell(rowFrom - 1, colFrom + 1, results, protectedCells, this.color);
-            if (colFrom != 0)
-                Piece.addMoveAndTestEmptyCell(rowFrom - 1, colFrom - 1, results, protectedCells, this.color);
+        if (row != 0) {
+            Piece.addMoveAndTestEmptyCell(row - 1, col, results, protectedCells, this.color);
+            if (col != BoardDimensions.MAX_COL.getValue() - 1)
+                Piece.addMoveAndTestEmptyCell(row - 1, col + 1, results, protectedCells, this.color);
+            if (col != 0)
+                Piece.addMoveAndTestEmptyCell(row - 1, col - 1, results, protectedCells, this.color);
         }
-        if (colFrom != BoardDimensions.MAX_COL.getValue() - 1)
-            Piece.addMoveAndTestEmptyCell(rowFrom, colFrom + 1, results, protectedCells, this.color);
-        if (colFrom != 0)
-            Piece.addMoveAndTestEmptyCell(rowFrom, colFrom - 1, results, protectedCells, this.color);
+        if (col != BoardDimensions.MAX_COL.getValue() - 1)
+            Piece.addMoveAndTestEmptyCell(row, col + 1, results, protectedCells, this.color);
+        if (col != 0)
+            Piece.addMoveAndTestEmptyCell(row, col - 1, results, protectedCells, this.color);
 
         return results;
     }
@@ -66,9 +76,9 @@ public class King implements Piece {
     public void setCheck(boolean check, Cell piece) {
         this.isCheck = check;
         if (!check)
-            this.cellPerformsCheck = null;
+            this.cellPerformingCheck = null;
         else
-            this.cellPerformsCheck = piece;
+            this.cellPerformingCheck = piece;
     }
 
     /**
@@ -77,5 +87,10 @@ public class King implements Piece {
     @Override
     public ArrayList<Cell> getProtectedCells() {
         return this.protectedCells;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return false;
     }
 }

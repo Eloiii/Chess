@@ -237,4 +237,22 @@ public class Board {
         }
         return res;
     }
+
+    public ArrayList<Cell> getCellsBetween(Cell c1, Cell c2) {
+        ArrayList<Cell> cellsBetweenc1Andc2 = new ArrayList<>();
+        int diff_X = c1.getRow() - c2.getRow();
+        int diff_Y = c1.getCol() - c2.getCol();
+        int distance = c1.distanceFrom(c2);
+        if (distance == 1)
+            return cellsBetweenc1Andc2;
+        double interval_X = diff_X / (distance + 1f);
+        double interval_Y = diff_Y / (distance + 1f);
+        for (int i = 1; i < 3; i++) {
+            int x = (int) Math.round(c2.getRow() + interval_X * i);
+            int y = (int) Math.round(c2.getCol() + interval_Y * i);
+            Cell cell = this.at(x, y);
+            cellsBetweenc1Andc2.add(cell);
+        }
+        return cellsBetweenc1Andc2;
+    }
 }

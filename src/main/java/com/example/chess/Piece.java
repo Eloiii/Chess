@@ -1,5 +1,6 @@
 package com.example.chess;
 
+
 import java.util.ArrayList;
 
 /**
@@ -10,10 +11,10 @@ public interface Piece {
     /**
      * Add the move in the array of possible moves
      *
-     * @param row     the row of the piece
-     * @param col     the col of the piece
+     * @param row           the row of the piece
+     * @param col           the col of the piece
      * @param possibleMoves the legal move list
-     * @param color   color of the piece
+     * @param color         color of the piece
      * @return true if the destination cell is an empty cell, false if the destination cell is an opponent piece
      */
     static boolean addMoveAndTestEmptyCell(int row, int col, ArrayList<Cell> possibleMoves, ArrayList<Cell> protectedCells, COLOR color) {
@@ -21,7 +22,7 @@ public interface Piece {
         Cell cell = board.at(row, col);
         Piece piece = cell.getPiece();
         if (!piece.isVoidPiece()) {
-            if(piece.getColor() != color)
+            if (piece.getColor() != color)
                 possibleMoves.add(cell);
             else
                 protectedCells.add(cell);
@@ -31,14 +32,49 @@ public interface Piece {
         return false;
     }
 
+    static void keepOnlyCheckCounters(ArrayList<Cell> basicMoves, Cell myKingCell) {
+        King myKing = (King) myKingCell.getPiece();
+        basicMoves.removeIf(dest -> !isBetweenKingAndCheckingPiece(dest, myKingCell) && !isEatingCheckingPiece(dest, myKing));
+    }
+
+    static boolean isEatingCheckingPiece(Cell dest, King myKingCell) {
+        return dest == myKingCell.cellPerformingCheck;
+    }
+
+    static boolean isBetweenKingAndCheckingPiece(Cell dest, Cell myKingCell) {
+        Board board = Board.getInstance();
+        Cell cellPerformingCheck = ((King) myKingCell.getPiece()).cellPerformingCheck;
+        return board.getCellsBetween(myKingCell, cellPerformingCheck).contains(dest);
+    }
+
+    static boolean checkOnKing(COLOR color) {
+        Board board = Board.getInstance();
+        King myKing = (King) board.getCellByPiece(new King(color), color).getPiece();
+        return myKing.isCheck();
+    }
+
+    static void filterMoves(boolean checkOnMyKing, Board board, ArrayList<Cell> basicMoves, boolean isPinned, COLOR color) {
+        if (checkOnMyKing) {
+            Cell myKingCell = board.getCellByPiece(new King(color), color);
+            Piece.keepOnlyCheckCounters(basicMoves, myKingCell);
+        } else {
+            if (isPinned)
+                filterPinned(basicMoves);
+        }
+    }
+
+    static void filterPinned(ArrayList<Cell> basicMoves) {
+        //TODO KEEP ONLY THE MOVE THAT CAN EAT THE PINNING PIECE
+    }
+
     /**
      * Get the legal moves for a piece
      *
-     * @param rowFrom the row of the piece
-     * @param colFrom the col of the pieceboard
+     * @param row the row of the piece
+     * @param col the col of the pieceboard
      * @return list of legal movess
      */
-    ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom);
+    ArrayList<Cell> getLegalMoves(int row, int col);
 
     /**
      * Get char representing the piece
@@ -65,4 +101,6 @@ public interface Piece {
      * Get protected cells
      */
     ArrayList<Cell> getProtectedCells();
+
+    boolean isPinned();
 }

@@ -8,7 +8,7 @@ public class VoidPiece implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
         return null;
     }
 
@@ -33,5 +33,10 @@ public class VoidPiece implements Piece {
     @Override
     public ArrayList<Cell> getProtectedCells() {
         return null;
+    }
+
+    @Override
+    public boolean isPinned() {
+        return false;
     }
 }

@@ -15,10 +15,23 @@ public class Rook implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
-        ArrayList<Cell> results = new ArrayList<>();
+    public ArrayList<Cell> getLegalMoves(int row, int col) {
+        //TODO FIND A WAY TO HAVE NO MORE DUPLICATES LIKE THIS
         this.protectedCells = new ArrayList<>();
+        boolean checkOnMyKing = Piece.checkOnKing(this.color);
+        Board board = Board.getInstance();
+        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
+        return possibleMoves;
+    }
 
+    public boolean isPinned() {
+        //TODO DETECT IF PINNED
+        return false;
+    }
+
+    private ArrayList<Cell> getBasicMoves(int rowFrom, int colFrom) {
+        ArrayList<Cell> results = new ArrayList<>();
         // Bas
         for (int rowFor = rowFrom + 1; rowFor < BoardDimensions.MAX_ROW.getValue(); rowFor++) {
             if (Piece.addMoveAndTestEmptyCell(rowFor, colFrom, results, protectedCells, this.color)) break;

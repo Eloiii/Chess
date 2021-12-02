@@ -109,4 +109,8 @@ public class Cell {
     public ArrayList<Cell> getLegalMovesForPiece() {
         return this.piece.getLegalMoves(this.row, this.col);
     }
+
+    public boolean hasSameCoordinates(Cell cell) {
+        return (cell.getRow() == this.getRow()) && (cell.getCol() == this.getCol());
+    }
 }

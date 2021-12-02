@@ -8,7 +8,7 @@ public class VoidPiece implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
+    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
         return null;
     }
 
@@ -24,6 +24,14 @@ public class VoidPiece implements Piece {
 
     @Override
     public COLOR getColor() {
+        return null;
+    }
+
+    /**
+     * Get protected cells
+     */
+    @Override
+    public ArrayList<Cell> getProtectedCells() {
         return null;
     }
 }

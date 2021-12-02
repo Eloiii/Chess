@@ -1,6 +1,8 @@
 package com.example.chess;
 
 
+import org.testng.internal.junit.ArrayAsserts;
+
 import java.util.ArrayList;
 
 /**
@@ -108,11 +110,14 @@ public class Game {
     private ArrayList<Cell> getPossibleMoves() throws CheckException {
         ArrayList<Cell> possibleMoves;
         Cell king = board.getCellByPiece(new King(this.turn), this.turn);
+        boolean isKing = this.cellSelected.getPiece() instanceof King;
         if (((King) king.getPiece()).isCheck())
             possibleMoves = getSelectedPieceMovesPreventingCheck(king);
         else {
-            possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
-            if (!(this.cellSelected.getPiece() instanceof King))
+            possibleMoves = this.cellSelected.getLegalMovesForPiece();
+            if(isKing)
+                possibleMoves = this.getKingPossibleMoves(possibleMoves);
+            if (!isKing)
                 possibleMoves.removeIf(this::moveCreatesCheck);
         }
         return possibleMoves;
@@ -126,15 +131,11 @@ public class Game {
      * @throws CheckException catch if the selected piece cannot prevent the check
      */
     private ArrayList<Cell> getSelectedPieceMovesPreventingCheck(Cell kingPosition) throws CheckException {
-        //TODO Special case for king to do here
         ArrayList<Cell> res = new ArrayList<>();
-        ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece(this.board);
+        ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece();
         Cell cellPerformingCheck = ((King) kingPosition.getPiece()).cellPerformsCheck;
         if (this.cellSelected.getPiece() instanceof King) {
-            for (Cell move : possibleMoves) {
-                if (kingCanMoveTo(move))
-                    res.add(move);
-            }
+            res = getKingPossibleMoves(possibleMoves);
         } else {
             ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
             for (Cell move :
@@ -152,12 +153,22 @@ public class Game {
             return res;
     }
 
+    private ArrayList<Cell> getKingPossibleMoves(ArrayList<Cell> possibleMoves) {
+        ArrayList<Cell> res = new ArrayList<>();
+        for (Cell move : possibleMoves) {
+            if (kingCanMoveTo(move))
+                res.add(move);
+        }
+        return res;
+    }
+
     private boolean kingCanMoveTo(Cell move) {
         ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
         ArrayList<Cell> everyMoveForAllPieces = new ArrayList<>();
+        ArrayList<Cell> protectedCells = new ArrayList<>();
         for (Cell cell :
                 allCellsForOppositColor) {
-            ArrayList<Cell> legalMovesForCell = cell.getLegalMovesForPiece(board);
+            ArrayList<Cell> legalMovesForCell = cell.getLegalMovesForPiece();
             if(cell.getPiece() instanceof Pawn) {
                 for(Cell pawnMove : legalMovesForCell) {
                     if(pawnMove.getCol() != cell.getCol()) {
@@ -167,12 +178,10 @@ public class Game {
             }
             else
                 everyMoveForAllPieces.addAll(legalMovesForCell);
+            protectedCells.addAll(cell.getPiece().getProtectedCells());
         }
-        return !everyMoveForAllPieces.contains(move);
+        return (!everyMoveForAllPieces.contains(move) && !protectedCells.contains(move));
     }
-
-    //TODO still bug
-
     /**
      * Get ALL the cells that prevent the check
      *
@@ -225,7 +234,7 @@ public class Game {
      * @param source the cell where from where the check is checked
      */
     private void checkAndSetIfKingChecked(Cell source) {
-        ArrayList<Cell> possibleMoves = source.getLegalMovesForPiece(this.board);
+        ArrayList<Cell> possibleMoves = source.getLegalMovesForPiece();
         for (Cell move :
                 possibleMoves) {
             Cell cell = this.board.at(move.getRow(), move.getCol());

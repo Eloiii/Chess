@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class Pawn implements Piece {
 
     private final COLOR color;
+    /**
+     * Cells (pieces of the same color) that this piece is protecting)
+     */
+    private ArrayList<Cell> protectedCells;
 
     public Pawn(COLOR color) {
         this.color = color;
@@ -12,8 +16,10 @@ public class Pawn implements Piece {
 
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
+    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+        Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
+        this.protectedCells = new ArrayList<>();
 
         int shiftSingle = this.color == COLOR.BLACK ? 1 : -1;
         Piece piece = board.at(rowFrom + shiftSingle, colFrom).getPiece();
@@ -29,14 +35,24 @@ public class Pawn implements Piece {
 
 
         if (colFrom != 7) {
-            Piece pieceDiagonalRight = board.at(rowFrom + shiftSingle, colFrom + 1).getPiece();
-            if (!pieceDiagonalRight.isVoidPiece() && pieceDiagonalRight.getColor() != this.color)
-                results.add(board.at(rowFrom + shiftSingle, colFrom + 1));
+            Cell cell = board.at(rowFrom + shiftSingle, colFrom + 1);
+            Piece pieceDiagonalRight = cell.getPiece();
+            if (!pieceDiagonalRight.isVoidPiece()) {
+                if(pieceDiagonalRight.getColor() != this.color)
+                    results.add(cell);
+                else
+                    this.protectedCells.add(cell);
+            }
         }
         if (colFrom != 0) {
-            Piece pieceDiagonalLeft = board.at(rowFrom + shiftSingle, colFrom - 1).getPiece();
-            if (!pieceDiagonalLeft.isVoidPiece() && pieceDiagonalLeft.getColor() != this.color)
-                results.add(board.at(rowFrom + shiftSingle, colFrom - 1));
+            Cell cell = board.at(rowFrom + shiftSingle, colFrom - 1);
+            Piece pieceDiagonalLeft = cell.getPiece();
+            if (!pieceDiagonalLeft.isVoidPiece()) {
+                if(pieceDiagonalLeft.getColor() != this.color)
+                    results.add(cell);
+                else
+                    this.protectedCells.add(cell);
+            }
         }
 
         return results;
@@ -55,5 +71,13 @@ public class Pawn implements Piece {
     @Override
     public COLOR getColor() {
         return this.color;
+    }
+
+    /**
+     * Get protected cells
+     */
+    @Override
+    public ArrayList<Cell> getProtectedCells() {
+        return this.protectedCells;
     }
 }

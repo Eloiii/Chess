@@ -1,29 +1,34 @@
 package com.example.chess;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Represent a piece on the board
  */
 public interface Piece {
+
     /**
-     * Add the move in the array if it is legal
+     * Add the move in the array of possible moves
      *
      * @param row     the row of the piece
      * @param col     the col of the piece
-     * @param board   the board
-     * @param results the legal move list
+     * @param possibleMoves the legal move list
      * @param color   color of the piece
-     * @return true if the move is legal, false if the move is illegal
+     * @return true if the destination cell is an empty cell, false if the destination cell is an opponent piece
      */
-    static boolean addIfLegalDestination(int row, int col, Board board, ArrayList<Cell> results, COLOR color) {
-        Piece piece = board.at(row, col).getPiece();
+    static boolean addMoveAndTestEmptyCell(int row, int col, ArrayList<Cell> possibleMoves, ArrayList<Cell> protectedCells, COLOR color) {
+        Board board = Board.getInstance();
+        Cell cell = board.at(row, col);
+        Piece piece = cell.getPiece();
         if (!piece.isVoidPiece()) {
-            if (piece.getColor() != color)
-                results.add(board.at(row, col));
+            if(piece.getColor() != color)
+                possibleMoves.add(cell);
+            else
+                protectedCells.add(cell);
             return true;
         }
-        results.add(board.at(row, col));
+        possibleMoves.add(cell);
         return false;
     }
 
@@ -31,11 +36,10 @@ public interface Piece {
      * Get the legal moves for a piece
      *
      * @param rowFrom the row of the piece
-     * @param colFrom the col of the piece
-     * @param board   the board
+     * @param colFrom the col of the pieceboard
      * @return list of legal movess
      */
-    ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board);
+    ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom);
 
     /**
      * Get char representing the piece
@@ -57,4 +61,9 @@ public interface Piece {
      * @return the color of the piece
      */
     COLOR getColor();
+
+    /**
+     * Get protected cells
+     */
+    ArrayList<Cell> getProtectedCells();
 }

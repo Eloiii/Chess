@@ -12,6 +12,11 @@ public class Bishop implements Piece {
      */
     private final COLOR color;
 
+    /**
+     * Cells (pieces of the same color) that this piece is protecting)
+     */
+    private ArrayList<Cell> protectedCells;
+
     public Bishop(COLOR color) {
         this.color = color;
     }
@@ -22,54 +27,32 @@ public class Bishop implements Piece {
      *
      * @param rowFrom the row of the piece
      * @param colFrom the col of the piece
-     * @param board   the board
      * @return legal moves of the bishop
      */
     @Override
-    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom, Board board) {
+    public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
+        Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
-        int stop, rowStopCell, colStopCell;
+        this.protectedCells = new ArrayList<>();
+        getBottomRightDiagonalMoves(rowFrom, colFrom, results);
+
+
+        getTopLeftDiagonalMoves(rowFrom, colFrom, board, results);
+
+
+        getBottomLeftDiagonalMoves(rowFrom, colFrom, board, results);
+
+
+        getTopRightDiagonalMoves(rowFrom, colFrom, board, results);
+
+        return results;
+    }
+
+    private void getTopRightDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+        int rowStopCell;
+        int colStopCell;
+        int stop;
         Cell stopCell;
-
-        //getting bottom right legal moves
-        stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
-        if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {
-            for (int index = rowFrom + 1; index < rowFrom + stop; index++) {
-                if (Piece.addIfLegalDestination(index, colFrom + (index - rowFrom), board, results, this.color)) break;
-            }
-        }
-
-
-        //getting top left legal moves
-        if (rowFrom > colFrom) {
-            rowStopCell = rowFrom - colFrom;
-            colStopCell = 0;
-        } else {
-            rowStopCell = 0;
-            colStopCell = colFrom - rowFrom;
-        }
-        stopCell = board.at(rowStopCell, colStopCell);
-        stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
-        for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalDestination(rowFrom - (index + 1), colFrom - index - 1, board, results, this.color)) break;
-        }
-
-
-        //getting bottom left legal moves
-        if (rowFrom + colFrom < BoardDimensions.MAX_ROW.getValue() - 1) {
-            rowStopCell = rowFrom + colFrom;
-            colStopCell = 0;
-        } else {
-            rowStopCell = BoardDimensions.MAX_COL.getValue() - 1;
-            colStopCell = (rowFrom + colFrom) - (BoardDimensions.MAX_COL.getValue() - 1);
-        }
-        stopCell = board.at(rowStopCell, colStopCell);
-        stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
-        for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalDestination(rowFrom + index + 1, colFrom - index - 1, board, results, this.color)) break;
-        }
-
-
         //getting top right legal moves
         if (rowFrom + colFrom < BoardDimensions.MAX_ROW.getValue() - 1) {
             rowStopCell = 0;
@@ -81,10 +64,59 @@ public class Bishop implements Piece {
         stopCell = board.at(rowStopCell, colStopCell);
         stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
         for (int index = 0; index < stop; index++) {
-            if (Piece.addIfLegalDestination(rowFrom - (index + 1), colFrom + index + 1, board, results, this.color)) break;
+            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom + index + 1, results, protectedCells, this.color)) break;
         }
+    }
 
-        return results;
+    private void getBottomLeftDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+        Cell stopCell;
+        int colStopCell;
+        int rowStopCell;
+        int stop;
+        //getting bottom left legal moves
+        if (rowFrom + colFrom < BoardDimensions.MAX_ROW.getValue() - 1) {
+            rowStopCell = rowFrom + colFrom;
+            colStopCell = 0;
+        } else {
+            rowStopCell = BoardDimensions.MAX_COL.getValue() - 1;
+            colStopCell = (rowFrom + colFrom) - (BoardDimensions.MAX_COL.getValue() - 1);
+        }
+        stopCell = board.at(rowStopCell, colStopCell);
+        stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
+        for (int index = 0; index < stop; index++) {
+            if (Piece.addMoveAndTestEmptyCell(rowFrom + index + 1, colFrom - index - 1, results, protectedCells, this.color)) break;
+        }
+    }
+
+    private void getTopLeftDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+        int stop;
+        int colStopCell;
+        int rowStopCell;
+        Cell stopCell;
+        //getting top left legal moves
+        if (rowFrom > colFrom) {
+            rowStopCell = rowFrom - colFrom;
+            colStopCell = 0;
+        } else {
+            rowStopCell = 0;
+            colStopCell = colFrom - rowFrom;
+        }
+        stopCell = board.at(rowStopCell, colStopCell);
+        stop = board.at(rowFrom, colFrom).distanceFrom(stopCell);
+        for (int index = 0; index < stop; index++) {
+            if (Piece.addMoveAndTestEmptyCell(rowFrom - (index + 1), colFrom - index - 1, results, protectedCells, this.color)) break;
+        }
+    }
+
+    private void getBottomRightDiagonalMoves(int rowFrom, int colFrom, ArrayList<Cell> results) {
+        int stop;
+        //getting bottom right legal moves
+        stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
+        if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {
+            for (int index = rowFrom + 1; index < rowFrom + stop; index++) {
+                if (Piece.addMoveAndTestEmptyCell(index, colFrom + (index - rowFrom), results, protectedCells, this.color)) break;
+            }
+        }
     }
 
     /**
@@ -115,5 +147,13 @@ public class Bishop implements Piece {
     @Override
     public COLOR getColor() {
         return this.color;
+    }
+
+    /**
+     * Get protected cells
+     */
+    @Override
+    public ArrayList<Cell> getProtectedCells() {
+        return this.protectedCells;
     }
 }

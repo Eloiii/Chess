@@ -32,20 +32,24 @@ public class Bishop implements Piece {
     @Override
     public ArrayList<Cell> getLegalMoves(int rowFrom, int colFrom) {
         Board board = Board.getInstance();
-        ArrayList<Cell> results = new ArrayList<>();
+        ArrayList<Cell> legalMoves = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
-        getBottomRightDiagonalMoves(rowFrom, colFrom, results);
 
+        getBottomRightDiagonalMoves(rowFrom, colFrom, legalMoves);
+        getTopLeftDiagonalMoves(rowFrom, colFrom, board, legalMoves);
+        getBottomLeftDiagonalMoves(rowFrom, colFrom, board, legalMoves);
+        getTopRightDiagonalMoves(rowFrom, colFrom, board, legalMoves);
 
-        getTopLeftDiagonalMoves(rowFrom, colFrom, board, results);
+//        if(check)  { // if my king is check
+////            ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
+//            for (Cell move :
+//                    legalMoves) {
+//                if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck)
+//                    res.add(move);
+//            }
+//        }
 
-
-        getBottomLeftDiagonalMoves(rowFrom, colFrom, board, results);
-
-
-        getTopRightDiagonalMoves(rowFrom, colFrom, board, results);
-
-        return results;
+        return legalMoves;
     }
 
     private void getTopRightDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {

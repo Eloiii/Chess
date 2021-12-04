@@ -108,7 +108,7 @@ public class Board {
      * @return true is the move is legal, false if it is illegal
      */
     private boolean isALegalMove(Cell cellFrom, int rowTo, int colTo) {
-        ArrayList<Cell> possibleMoves = cellFrom.getPiece().getLegalMoves(cellFrom.getRow(), cellFrom.getCol());
+        ArrayList<Cell> possibleMoves = Piece.getLegalMoves(cellFrom, null);
         for (Cell currentMove : possibleMoves) {
             if (!this.outOfBounds(currentMove.getRow(), currentMove.getCol())) {
                 if (currentMove.getCol() == colTo && currentMove.getRow() == rowTo)

@@ -8,7 +8,7 @@ public class VoidPiece implements Piece {
     }
 
     @Override
-    public ArrayList<Cell> getLegalMoves(int row, int col) {
+    public ArrayList<Cell> getBasicMoves(Cell position) {
         return null;
     }
 

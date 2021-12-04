@@ -107,7 +107,8 @@ public class Cell {
      * @return the list of legal moves
      */
     public ArrayList<Cell> getLegalMovesForPiece() {
-        return this.piece.getLegalMoves(this.row, this.col);
+        Board board = Board.getInstance();
+        return Piece.getLegalMoves(board.at(this.row, this.col), null);
     }
 
     public boolean hasSameCoordinates(Cell cell) {

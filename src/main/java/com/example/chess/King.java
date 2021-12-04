@@ -15,23 +15,15 @@ public class King implements Piece {
 
     public King(COLOR color) {
         this.color = color;
+        this.protectedCells = new ArrayList<>();
         this.isCheck = false;
     }
 
-    @Override
-    public ArrayList<Cell> getLegalMoves(int row, int col) {
-        //TODO CHECK KING DO NOT PUT ITSELF IN CHECK
-        this.protectedCells = new ArrayList<>();
-        boolean checkOnMyKing = Piece.checkOnKing(this.color);
-        Board board = Board.getInstance();
-        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
-        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
-        return possibleMoves;
-    }
-
-    public ArrayList<Cell> getBasicMoves(int row, int col) {
+    public ArrayList<Cell> getBasicMoves(Cell position) {
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
+        int row = position.getRow();
+        int col = position.getCol();
         if (row != BoardDimensions.MAX_ROW.getValue() - 1) {
             Piece.addMoveAndTestEmptyCell(row + 1, col, results, protectedCells, this.color);
             if (col != BoardDimensions.MAX_COL.getValue() - 1)
@@ -93,4 +85,5 @@ public class King implements Piece {
     public boolean isPinned() {
         return false;
     }
+
 }

@@ -15,49 +15,34 @@ public class Bishop implements Piece {
     /**
      * Cells (pieces of the same color) that this piece is protecting)
      */
-    private ArrayList<Cell> protectedCells;
+    private final ArrayList<Cell> protectedCells;
 
     public Bishop(COLOR color) {
         this.color = color;
-    }
-
-    /**
-     * Get legals moves for the bishop :
-     * The bishop moves diagonally for an unlimited distance until it reaches another piece or the end of the board
-     *
-     * @param row the row of the piece
-     * @param col the col of the piece
-     * @return legal moves of the bishop
-     */
-    @Override
-    public ArrayList<Cell> getLegalMoves(int row, int col) {
         this.protectedCells = new ArrayList<>();
-        boolean checkOnMyKing = Piece.checkOnKing(this.color);
-        Board board = Board.getInstance();
-        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
-        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
-        return possibleMoves;
     }
 
     public boolean isPinned() {
         return false;
     }
 
-    private ArrayList<Cell> getBasicMoves(int row, int col) {
+    public ArrayList<Cell> getBasicMoves(Cell position) {
         Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
-        getBottomRightDiagonalMoves(row, col, results);
-        getTopLeftDiagonalMoves(row, col, board, results);
-        getBottomLeftDiagonalMoves(row, col, board, results);
-        getTopRightDiagonalMoves(row, col, board, results);
+        getBottomRightDiagonalMoves(position, results);
+        getTopLeftDiagonalMoves(position, board, results);
+        getBottomLeftDiagonalMoves(position, board, results);
+        getTopRightDiagonalMoves(position, board, results);
         return results;
     }
 
-    private void getTopRightDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+    private void getTopRightDiagonalMoves(Cell source, Board board, ArrayList<Cell> results) {
         int rowStopCell;
         int colStopCell;
         int stop;
         Cell stopCell;
+        int rowFrom = source.getRow();
+        int colFrom = source.getCol();
         //getting top right legal moves
         if (rowFrom + colFrom < BoardDimensions.MAX_ROW.getValue() - 1) {
             rowStopCell = 0;
@@ -74,11 +59,13 @@ public class Bishop implements Piece {
         }
     }
 
-    private void getBottomLeftDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+    private void getBottomLeftDiagonalMoves(Cell source, Board board, ArrayList<Cell> results) {
         Cell stopCell;
         int colStopCell;
         int rowStopCell;
         int stop;
+        int rowFrom = source.getRow();
+        int colFrom = source.getCol();
         //getting bottom left legal moves
         if (rowFrom + colFrom < BoardDimensions.MAX_ROW.getValue() - 1) {
             rowStopCell = rowFrom + colFrom;
@@ -95,11 +82,13 @@ public class Bishop implements Piece {
         }
     }
 
-    private void getTopLeftDiagonalMoves(int rowFrom, int colFrom, Board board, ArrayList<Cell> results) {
+    private void getTopLeftDiagonalMoves(Cell source, Board board, ArrayList<Cell> results) {
         int stop;
         int colStopCell;
         int rowStopCell;
         Cell stopCell;
+        int rowFrom = source.getRow();
+        int colFrom = source.getCol();
         //getting top left legal moves
         if (rowFrom > colFrom) {
             rowStopCell = rowFrom - colFrom;
@@ -116,8 +105,10 @@ public class Bishop implements Piece {
         }
     }
 
-    private void getBottomRightDiagonalMoves(int rowFrom, int colFrom, ArrayList<Cell> results) {
+    private void getBottomRightDiagonalMoves(Cell source, ArrayList<Cell> results) {
         int stop;
+        int rowFrom = source.getRow();
+        int colFrom = source.getCol();
         //getting bottom right legal moves
         stop = Math.min(BoardDimensions.MAX_ROW.getValue() - rowFrom, BoardDimensions.MAX_COL.getValue() - colFrom);
         if (colFrom != BoardDimensions.MAX_COL.getValue() - 1) {

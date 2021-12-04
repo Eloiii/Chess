@@ -215,7 +215,6 @@ public class Game {
      * @param source the cell where from where the check is checked
      */
     private void checkAndSetIfKingChecked(Cell source) {
-        //TODO MAYBE BETTER WAY ?
         ArrayList<Cell> possibleMoves = source.getLegalMovesForPiece();
         for (Cell move :
                 possibleMoves) {

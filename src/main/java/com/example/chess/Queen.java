@@ -12,36 +12,27 @@ public class Queen implements Piece {
 
     public Queen(COLOR color) {
         this.color = color;
-    }
-
-    @Override
-    public ArrayList<Cell> getLegalMoves(int row, int col) {
         this.protectedCells = new ArrayList<>();
-        boolean checkOnMyKing = Piece.checkOnKing(this.color);
-        Board board = Board.getInstance();
-        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
-        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
-        return possibleMoves;
     }
 
-    public ArrayList<Cell> getBasicMoves(int row, int col) {
+    public ArrayList<Cell> getBasicMoves(Cell position) {
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
-        getBishopMovementsAndProtectedCells(row, col, results);
-        getRookMovementsAndProtectedCells(row, col, results);
+        getBishopMovementsAndProtectedCells(position, results);
+        getRookMovementsAndProtectedCells(position, results);
         return results;
     }
 
-    private void getBishopMovementsAndProtectedCells(int rowFrom, int colFrom, ArrayList<Cell> results) {
+    private void getBishopMovementsAndProtectedCells(Cell source, ArrayList<Cell> results) {
         Bishop bishop = new Bishop(this.color);
-        ArrayList<Cell> bishopMovements = bishop.getLegalMoves(rowFrom, colFrom);
+        ArrayList<Cell> bishopMovements = Piece.getLegalMoves(source, bishop);
         this.protectedCells.addAll(bishop.getProtectedCells());
         results.addAll(bishopMovements);
     }
 
-    private void getRookMovementsAndProtectedCells(int rowFrom, int colFrom, ArrayList<Cell> results) {
+    private void getRookMovementsAndProtectedCells(Cell source, ArrayList<Cell> results) {
         Rook rook = new Rook(this.color);
-        ArrayList<Cell> rookMovements = rook.getLegalMoves(rowFrom, colFrom);
+        ArrayList<Cell> rookMovements = Piece.getLegalMoves(source, new Rook(this.color));
         this.protectedCells.addAll(rook.getProtectedCells());
         results.addAll(rookMovements);
     }

@@ -12,23 +12,16 @@ public class Pawn implements Piece {
 
     public Pawn(COLOR color) {
         this.color = color;
-    }
-
-    @Override
-    public ArrayList<Cell> getLegalMoves(int row, int col) {
         this.protectedCells = new ArrayList<>();
-        boolean checkOnMyKing = Piece.checkOnKing(this.color);
-        Board board = Board.getInstance();
-        ArrayList<Cell> possibleMoves = getBasicMoves(row, col);
-        Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(), this.color);
-        return possibleMoves;
     }
 
 
-    public ArrayList<Cell> getBasicMoves(int row, int col) {
+    public ArrayList<Cell> getBasicMoves(Cell position) {
         Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
+        int row = position.getRow();
+        int col = position.getCol();
 
         int shiftSingle = this.color == COLOR.BLACK ? 1 : -1;
         Piece piece = board.at(row + shiftSingle, col).getPiece();

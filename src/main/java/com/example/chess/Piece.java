@@ -63,18 +63,38 @@ public interface Piece {
         }
     }
 
+
     static void filterPinned(ArrayList<Cell> basicMoves) {
-        //TODO KEEP ONLY THE MOVE THAT CAN EAT THE PINNING PIECE
+
     }
 
     /**
      * Get the legal moves for a piece
      *
-     * @param row the row of the piece
-     * @param col the col of the pieceboard
-     * @return list of legal movess
+     * @param source         @return list of legal movess
+     * @param specifiedPiece used by the queen to get bishop and rook moves
      */
-    ArrayList<Cell> getLegalMoves(int row, int col);
+    static ArrayList<Cell> getLegalMoves(Cell source, Piece specifiedPiece) {
+        Board board = Board.getInstance();
+        Piece targetedPiece;
+        if (specifiedPiece == null)
+            targetedPiece = board.at(source.getRow(), source.getCol()).getPiece();
+        else
+            targetedPiece = specifiedPiece;
+        boolean checkOnMyKing = Piece.checkOnKing(targetedPiece.getColor());
+        ArrayList<Cell> possibleMoves = targetedPiece.getBasicMoves(source);
+        Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
+        return possibleMoves;
+
+    }
+
+    /**
+     * Get all the moves the piece can do whatever the state of the board
+     *
+     * @param position the position of the piece
+     * @return all the intial moves the piece can do
+     */
+    ArrayList<Cell> getBasicMoves(Cell position);
 
     /**
      * Get char representing the piece

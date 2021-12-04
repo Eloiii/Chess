@@ -255,4 +255,35 @@ public class Board {
         }
         return cellsBetweenc1Andc2;
     }
+
+    public Cell[] getCells() {
+        Cell[] cells = new Cell[BoardDimensions.MAX_ROW.getValue() * BoardDimensions.MAX_COL.getValue()];
+        int index = 0;
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+                cells[index] = this.at(row, col);
+                index++;
+            }
+        }
+        return cells;
+    }
+
+    /**
+     * Check if a given cell is under attack by a piece from the given color
+     *
+     * @param cell  the cell
+     * @param color the color attacking
+     * @return true if the cell is under attack, false either
+     */
+    public boolean isUnderAttack(Cell cell, COLOR color) {
+        ArrayList<Cell> allCellsOfPiecesForColor = this.getAllCellsForColor(color);
+        for (Cell piece : allCellsOfPiecesForColor) {
+            ArrayList<Cell> possiblesMoves = Piece.getLegalMoves(piece, null);
+            if (possiblesMoves.contains(cell))
+                return true;
+        }
+        return false;
+    }
+
+
 }

@@ -77,15 +77,16 @@ public interface Piece {
     static ArrayList<Cell> getLegalMoves(Cell source, Piece specifiedPiece) {
         Board board = Board.getInstance();
         Piece targetedPiece;
-        if (specifiedPiece == null)
-            targetedPiece = board.at(source.getRow(), source.getCol()).getPiece();
-        else
-            targetedPiece = specifiedPiece;
+        targetedPiece = specifiedPiece == null ? board.at(source.getRow(), source.getCol()).getPiece() : specifiedPiece;
         boolean checkOnMyKing = Piece.checkOnKing(targetedPiece.getColor());
         ArrayList<Cell> possibleMoves = targetedPiece.getBasicMoves(source);
-        Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
-        return possibleMoves;
+        if (targetedPiece instanceof King) {
+            if (checkOnMyKing)
+                possibleMoves.removeIf(move -> board.isUnderAttack(move, targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
+        } else
+            Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
 
+        return possibleMoves;
     }
 
     /**

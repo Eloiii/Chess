@@ -98,117 +98,6 @@ public class Game {
         }
     }
 
-//    /**
-//     * Get all the possibleMoves for the cell selected
-//     *
-//     * @return a list of possible moves
-//     * @throws CheckException catch illegal piece move when king is check
-//     */
-//    private ArrayList<Cell> getPossibleMoves() throws CheckException {
-//        ArrayList<Cell> possibleMoves;
-//        Cell king = board.getCellByPiece(new King(this.turn), this.turn);
-//        boolean isKing = this.cellSelected.getPiece() instanceof King;
-//        if (((King) king.getPiece()).isCheck())
-//            possibleMoves = getSelectedPieceMovesPreventingCheck(king);
-//        else {
-//            possibleMoves = this.cellSelected.getLegalMovesForPiece();
-//            if(isKing)
-//                possibleMoves = this.getKingPossibleMoves(possibleMoves);
-//            if (!isKing)
-//                possibleMoves.removeIf(this::moveCreatesCheck);
-//        }
-//        return possibleMoves;
-//    }
-//
-//    /**
-//     * Get all the moves that can prevent the check for the selected piece
-//     *
-//     * @param kingPosition the king check
-//     * @return list of legal moves that can prevent the check
-//     * @throws CheckException catch if the selected piece cannot prevent the check
-//     */
-//    private ArrayList<Cell> getSelectedPieceMovesPreventingCheck(Cell kingPosition) throws CheckException {
-//        ArrayList<Cell> res = new ArrayList<>();
-//        ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece();
-//        Cell cellPerformingCheck = ((King) kingPosition.getPiece()).cellPerformingCheck;
-//        if (this.cellSelected.getPiece() instanceof King) {
-//            res = getKingPossibleMoves(possibleMoves);
-//        } else {
-//            ArrayList<Cell> cellsPreventingCheck = getCellsPreventingCheck(kingPosition, cellPerformingCheck);
-//            for (Cell move :
-//                    possibleMoves) {
-//                if (cellsPreventingCheck.contains(move) || move == cellPerformingCheck) res.add(move);
-//            }
-//        }
-//        if (res.isEmpty()) {
-//            try {
-//                throw new CheckException("King is check and " + this.cellSelected.toString() + " cannot prevent it");
-//            } finally {
-//                this.cellSelected = null;
-//            }
-//        } else
-//            return res;
-//    }
-//
-//    private ArrayList<Cell> getKingPossibleMoves(ArrayList<Cell> possibleMoves) {
-//        ArrayList<Cell> res = new ArrayList<>();
-//        for (Cell move : possibleMoves) {
-//            if (kingCanMoveTo(move))
-//                res.add(move);
-//        }
-//        return res;
-//    }
-//
-//    private boolean kingCanMoveTo(Cell move) {
-//        ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
-//        ArrayList<Cell> everyMoveForAllPieces = new ArrayList<>();
-//        ArrayList<Cell> protectedCells = new ArrayList<>();
-//        for (Cell cell :
-//                allCellsForOppositColor) {
-//            ArrayList<Cell> legalMovesForCell = cell.getLegalMovesForPiece();
-//            if(cell.getPiece() instanceof Pawn) {
-//                for(Cell pawnMove : legalMovesForCell) {
-//                    if(pawnMove.getCol() != cell.getCol()) {
-//                        everyMoveForAllPieces.add(pawnMove);
-//                    }
-//                }
-//            }
-//            else
-//                everyMoveForAllPieces.addAll(legalMovesForCell);
-//            protectedCells.addAll(cell.getPiece().getProtectedCells());
-//        }
-//        return (!everyMoveForAllPieces.contains(move) && !protectedCells.contains(move));
-//    }
-//
-//
-//
-//
-//
-//    /**
-//     * Checks if the move is creating a check on his own king (illegal)
-//     *
-//     * @param destination the wanted destination of the selected cell
-//     * @return true if the move creates an illegal check; false if not
-//     */
-//    private boolean moveCreatesCheck(Cell destination) {
-//        boolean res = false;
-//        this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), new VoidPiece()); // simule piece pas là
-//        ArrayList<Cell> allCellsForOppositColor = board.getAllCellsForColor(this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK);
-//        for (Cell cell :
-//                allCellsForOppositColor) {
-//            checkAndSetIfKingChecked(cell);
-//        }
-//        King king = (King) board.getCellByPiece(new King(this.turn), this.turn).getPiece();
-//        if (king.isCheck()) {
-//            king.setCheck(false, null);
-//            res = true;
-//        }
-//        this.board.setPiece(this.cellSelected.getRow(), this.cellSelected.getCol(), this.cellSelected.getPiece());
-//        return res;
-//
-//
-//    }
-
     /*
      * Checks if the opponent's king has been check
      *
@@ -245,8 +134,13 @@ public class Game {
      * @throws IllegalMoveException thrown if the wrong color is selected
      */
     private void checkWrongColorSelected() throws IllegalMoveException {
-        if (this.cellSelected.getPiece().getColor() != this.turn)
-            throw new IllegalMoveException("Wrong color selected : selected " + this.cellSelected.getPiece().getColor() + " but it is " + this.turn + " to move.");
+        if (this.cellSelected.getPiece().getColor() != this.turn) {
+            try {
+                throw new IllegalMoveException("Wrong color selected : selected " + this.cellSelected.getPiece().getColor() + " but it is " + this.turn + " to move.");
+            } finally {
+                this.cellSelected = null;
+            }
+        }
     }
 
     /**

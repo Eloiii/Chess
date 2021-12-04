@@ -83,6 +83,7 @@ public interface Piece {
         if (targetedPiece instanceof King) {
             if (checkOnMyKing)
                 possibleMoves.removeIf(move -> board.isUnderAttack(move, targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
+            //TODO check if cell is protected
         } else
             Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
 

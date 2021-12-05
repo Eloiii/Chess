@@ -36,28 +36,35 @@ public class Pawn implements Piece {
         }
 
 
-        if (col != 7) {
-            Cell cell = board.at(row + shiftSingle, col + 1);
-            Piece pieceDiagonalRight = cell.getPiece();
-            if (!pieceDiagonalRight.isVoidPiece()) {
-                if (pieceDiagonalRight.getColor() != this.color)
-                    results.add(cell);
-                else
-                    this.protectedCells.add(cell);
-            }
-        }
-        if (col != 0) {
-            Cell cell = board.at(row + shiftSingle, col - 1);
-            Piece pieceDiagonalLeft = cell.getPiece();
-            if (!pieceDiagonalLeft.isVoidPiece()) {
-                if (pieceDiagonalLeft.getColor() != this.color)
-                    results.add(cell);
-                else
-                    this.protectedCells.add(cell);
-            }
-        }
+        results.addAll(getDiagonalCells(board, position, false));
 
         return results;
+    }
+
+    public ArrayList<Cell> getDiagonalCells(Board board, Cell position, boolean omitVoidPieces) {
+        ArrayList<Cell> res = new ArrayList<>();
+        int shiftSingle = this.color == COLOR.BLACK ? 1 : -1;
+        if (position.getCol() != 7) {
+            Cell cell = board.at(position.getRow() + shiftSingle, position.getCol() + 1);
+            Piece pieceDiagonalRight = cell.getPiece();
+            if (!pieceDiagonalRight.isVoidPiece() || omitVoidPieces) {
+                if (pieceDiagonalRight.getColor() != this.color)
+                    res.add(cell);
+                else
+                    this.protectedCells.add(cell);
+            }
+        }
+        if (position.getCol() != 0) {
+            Cell cell = board.at(position.getRow() + shiftSingle, position.getCol() - 1);
+            Piece pieceDiagonalLeft = cell.getPiece();
+            if (!pieceDiagonalLeft.isVoidPiece() || omitVoidPieces) {
+                if (pieceDiagonalLeft.getColor() != this.color)
+                    res.add(cell);
+                else
+                    this.protectedCells.add(cell);
+            }
+        }
+        return res;
     }
 
     @Override

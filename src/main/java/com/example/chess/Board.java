@@ -265,13 +265,17 @@ public class Board {
      */
     public boolean isUnderAttack(Cell cell, COLOR color) {
         ArrayList<Cell> allCellsOfPiecesForColor = this.getAllCellsForColor(color);
+        ArrayList<Cell> possiblesMoves;
         for (Cell piece : allCellsOfPiecesForColor) {
             if(piece.getPiece() instanceof  King) {
                 if(cell.distanceFrom(piece) <= 2)
                     return true;
                 else continue;
             }
-            ArrayList<Cell> possiblesMoves = Piece.getLegalMoves(piece, null);
+            if(piece.getPiece() instanceof Pawn)
+                possiblesMoves = ((Pawn) piece.getPiece()).getDiagonalCells(this, piece, true);
+            else
+                possiblesMoves = Piece.getLegalMoves(piece, null);
             if (possiblesMoves.contains(cell))
                 return true;
         }

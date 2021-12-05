@@ -256,18 +256,6 @@ public class Board {
         return cellsBetweenc1Andc2;
     }
 
-    public Cell[] getCells() {
-        Cell[] cells = new Cell[BoardDimensions.MAX_ROW.getValue() * BoardDimensions.MAX_COL.getValue()];
-        int index = 0;
-        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
-            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
-                cells[index] = this.at(row, col);
-                index++;
-            }
-        }
-        return cells;
-    }
-
     /**
      * Check if a given cell is under attack by a piece from the given color
      *

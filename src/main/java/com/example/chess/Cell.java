@@ -111,7 +111,12 @@ public class Cell {
         return Piece.getLegalMoves(board.at(this.row, this.col), null);
     }
 
-    public boolean hasSameCoordinates(Cell cell) {
-        return (cell.getRow() == this.getRow()) && (cell.getCol() == this.getCol());
+    public boolean isProtected() {
+        ArrayList<Cell> allPiecesForOppositColor = Board.getInstance().getAllCellsForColor(this.piece.getColor());
+        for (Cell cell : allPiecesForOppositColor) {
+            if(cell.getPiece().getProtectedCells().contains(this))
+                return true;
+        }
+        return false;
     }
 }

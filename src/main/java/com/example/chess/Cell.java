@@ -113,6 +113,7 @@ public class Cell {
 
     public boolean isProtected() {
         ArrayList<Cell> allPiecesForOppositColor = Board.getInstance().getAllCellsForColor(this.piece.getColor());
+        //TODO CALCUL DES PROTECTED CELLS SE FAIT SUR LE COUP DAVANT MDRR
         for (Cell cell : allPiecesForOppositColor) {
             if(cell.getPiece().getProtectedCells().contains(this))
                 return true;

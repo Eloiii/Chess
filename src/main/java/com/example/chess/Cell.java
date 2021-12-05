@@ -87,9 +87,9 @@ public class Cell {
      * @return an integer representing the distance between this cell and the 'to' cell
      */
     public int distanceFrom(Cell to) {
-        int diffRow = to.getRow() - this.getRow();
-        int diffCol = to.getCol() - this.getCol();
-        return Math.abs(Math.max(diffCol, diffRow));
+        int diffRow = Math.abs(to.getRow() - this.getRow());
+        int diffCol = Math.abs(to.getCol() - this.getCol());
+        return Math.max(diffCol, diffRow);
     }
 
     /**

@@ -81,8 +81,7 @@ public interface Piece {
         boolean checkOnMyKing = Piece.checkOnKing(targetedPiece.getColor());
         ArrayList<Cell> possibleMoves = targetedPiece.getBasicMoves(source);
         if (targetedPiece instanceof King) {
-            if (checkOnMyKing)
-                possibleMoves.removeIf(move -> board.isUnderAttack(move, targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
+            possibleMoves.removeIf(move -> board.isUnderAttack(move, targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
             //TODO check if cell is protected
         } else
             Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());

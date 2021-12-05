@@ -247,9 +247,9 @@ public class Board {
             return cellsBetweenc1Andc2;
         double interval_X = diff_X / (distance + 1f);
         double interval_Y = diff_Y / (distance + 1f);
-        for (int i = 1; i < 3; i++) {
-            int x = (int) Math.round(c2.getRow() + interval_X * i);
-            int y = (int) Math.round(c2.getCol() + interval_Y * i);
+        for (int i = 1; i < distance; i++) {
+            int x = (int) Math.floor(c2.getRow() + interval_X * i);
+            int y = (int) Math.floor(c2.getCol() + interval_Y * i);
             Cell cell = this.at(x, y);
             cellsBetweenc1Andc2.add(cell);
         }
@@ -278,6 +278,11 @@ public class Board {
     public boolean isUnderAttack(Cell cell, COLOR color) {
         ArrayList<Cell> allCellsOfPiecesForColor = this.getAllCellsForColor(color);
         for (Cell piece : allCellsOfPiecesForColor) {
+            if(piece.getPiece() instanceof  King) {
+                if(cell.distanceFrom(piece) <= 2)
+                    return true;
+                else continue;
+            }
             ArrayList<Cell> possiblesMoves = Piece.getLegalMoves(piece, null);
             if (possiblesMoves.contains(cell))
                 return true;

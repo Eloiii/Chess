@@ -16,6 +16,7 @@ public class WindowController {
     private GridPane grid;
 
     public void initialize() {
+        //TODO previous moves, timer and turn
         Board board = Board.getInstance();
         for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
             for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {

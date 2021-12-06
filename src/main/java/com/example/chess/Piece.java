@@ -50,7 +50,7 @@ public interface Piece {
     static boolean checkOnKing(COLOR color) {
         Board board = Board.getInstance();
         King myKing = (King) board.getCellByPiece(new King(color), color).getPiece();
-        return myKing.isCheck();
+        return myKing.isInCheck();
     }
 
     static void filterMoves(boolean checkOnMyKing, Board board, ArrayList<Cell> basicMoves, boolean isPinned, COLOR color) {

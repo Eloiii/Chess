@@ -6,7 +6,7 @@ public class King implements Piece {
 
     private final COLOR color;
     public Cell cellPerformingCheck;
-    private boolean isCheck;
+    private boolean isInCheck;
 
     /**
      * Cells (pieces of the same color) that this piece is protecting)
@@ -16,7 +16,7 @@ public class King implements Piece {
     public King(COLOR color) {
         this.color = color;
         this.protectedCells = new ArrayList<>();
-        this.isCheck = false;
+        this.isInCheck = false;
     }
 
     public ArrayList<Cell> getBasicMoves(Cell position) {
@@ -61,12 +61,12 @@ public class King implements Piece {
         return this.color;
     }
 
-    public boolean isCheck() {
-        return this.isCheck;
+    public boolean isInCheck() {
+        return this.isInCheck;
     }
 
     public void setCheck(boolean check, Cell piece) {
-        this.isCheck = check;
+        this.isInCheck = check;
         if (!check)
             this.cellPerformingCheck = null;
         else

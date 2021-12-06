@@ -29,6 +29,8 @@ public class Game {
      */
     private Cell cellSelected;
 
+    public boolean checkMate;
+
     /**
      * Creates a new game
      */
@@ -36,6 +38,7 @@ public class Game {
         this.board = Board.getInstance();
         this.turn = COLOR.WHITE;
         this.cellSelected = null;
+        this.checkMate = false;
     }
 
     /**
@@ -54,10 +57,7 @@ public class Game {
      * WHITE -> BLACK
      */
     private void changeTurn() {
-        if (this.turn == COLOR.BLACK)
-            this.turn = COLOR.WHITE;
-        else
-            this.turn = COLOR.BLACK;
+        this.turn = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
     }
 
     /**
@@ -87,6 +87,8 @@ public class Game {
      * @throws CheckException       catch illegal move when there is a check
      */
     public void selectCell(int row, int col, WindowController controller) throws IllegalMoveException, CheckException {
+        if(this.checkMate)
+            return;
         controller.resetColors(this.board);
         if (this.cellSelected == null || this.cellSelected.getPiece().getColor() == this.board.at(row, col).getPiece().getColor()) {
             this.cellSelected = this.board.at(row, col);
@@ -94,7 +96,7 @@ public class Game {
             ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece();
             colorPossibleMoves(possibleMoves, controller);
         } else {
-            makeAMove(row, col, controller);
+            makeAMove(controller, this.board.at(row, col));
         }
     }
 
@@ -148,16 +150,16 @@ public class Game {
     /**
      * Moving a piece on the board
      *
-     * @param row        destination row
-     * @param col        destination column
      * @param controller the JavaFX window controller
+     * @param dest the destination cell
      * @throws IllegalMoveException thrown when illegal move
      */
-    private void makeAMove(int row, int col, WindowController controller) throws IllegalMoveException {
-        this.board.move(this.cellSelected, row, col);
-        controller.moveImages(this.cellSelected, row, col);
-        Cell destination = this.board.at(row, col);
+    private void makeAMove(WindowController controller, Cell dest) throws IllegalMoveException {
+        this.board.move(this.cellSelected, dest);
+        controller.moveImages(this.cellSelected, dest);
+        Cell destination = this.board.at(dest.getRow(), dest.getCol());
         checkAndSetIfKingChecked(destination);
+        isCheckMate();
         this.cellSelected = null;
         this.nextTurn();
         this.changeTurn();
@@ -166,9 +168,14 @@ public class Game {
     /**
      * Check if checkmate
      *
-     * @return true if checkmate, false if game is still running
      */
-    public boolean gameOver() {
-        return false;
+    public void isCheckMate() {
+        COLOR opponent = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        Cell opponentKing = this.board.getCellByPiece(new King(opponent), opponent);
+        ArrayList<Cell> possibleMoves = opponentKing.getLegalMovesForPiece();
+        if(possibleMoves.isEmpty() && ((King) opponentKing.getPiece()).isInCheck()) {
+            this.checkMate = true;
+            System.out.println(this.turn + " WINS BY CHECKMATE");
+        }
     }
 }

@@ -101,6 +101,13 @@ public class Cell {
         return this.piece.toChar() + " at [" + this.row + "," + this.col + "]";
     }
 
+    public String coordinates() {
+        char a = 'a';
+        String letterTo = Character.toString(a + this.col);
+        String numTo = String.valueOf(8 - this.row);
+        return letterTo + numTo;
+    }
+
     /**
      * Returns the legal moves of the piece standing on the cell
      *

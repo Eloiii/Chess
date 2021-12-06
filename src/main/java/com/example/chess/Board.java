@@ -22,8 +22,18 @@ public class Board {
      */
     private Board() {
         this.cells = new Cell[BoardDimensions.MAX_ROW.getValue()][BoardDimensions.MAX_COL.getValue()];
+        this.fillCells();
         this.initPieces();
     }
+
+    private void fillCells() {
+        for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
+            for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+                this.cells[row][col] = new Cell(0, 0);
+            }
+        }
+    }
+
 
     /**
      * Get the instance of the board
@@ -52,48 +62,50 @@ public class Board {
      * Move a piece from a Cell to another
      *
      * @param from  the cell from where the piece is moved
-     * @param rowTo the destination row
-     * @param colTo the destination column
-     * @return true if the move is legal
+     * @param dest the destination cell
      * @throws IllegalMoveException catch an illegal move
      */
-    public boolean move(Cell from, int rowTo, int colTo) throws IllegalMoveException {
-        if (isALegalMove(from, rowTo, colTo)) {
-            this.setPiece(from.getRow(), from.getCol(), new VoidPiece());
-            this.setPiece(rowTo, colTo, from.getPiece());
-            System.out.println(moveToString(from, rowTo, colTo));
-            return true;
+    public void move(Cell from, Cell dest) throws IllegalMoveException {
+        if (isALegalMove(from, dest)) {
+            this.setPiece(new VoidPiece(), from.getRow(), from.getCol());
+            this.setPiece(from.getPiece(), dest.getRow(), dest.getCol());
+            System.out.println(moveToString(from, dest));
         } else
-            throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + rowTo + "," + colTo);
+            throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + dest.getRow() + "," + dest.getCol());
     }
 
     /**
      * Get the move as a String
      *
-     * @param from  the cell from where the piece is moved
-     * @param rowTo the destination row
-     * @param colTo the destination column
+     * @param source  the cell from where the piece is moved
+     * @param dest the destination cell
      * @return the formated move
      */
-    private String moveToString(Cell from, int rowTo, int colTo) {
-        char a = 'a';
-        String letterTo = Character.toString(a + colTo);
-        String numTo = String.valueOf(8 - rowTo);
-        if (from.getPiece() instanceof Pawn)
-            return letterTo + numTo;
-        else
-            return from.getPiece().toChar() + letterTo + numTo;
+    private String moveToString(Cell source, Cell dest) {
+        String sourceCoo = source.coordinates();
+        String destCoo = dest.coordinates();
+        if(!dest.getPiece().isVoidPiece()) {
+            if(source.getPiece() instanceof Pawn)
+                return sourceCoo.charAt(0) + "x" +destCoo;
+            else
+                return source.getPiece().toChar() + "x" + destCoo;
+        } else {
+            if(source.getPiece() instanceof Pawn)
+                return destCoo;
+            else
+                return source.getPiece().toChar() + destCoo;
+        }
     }
 
     /**
      * Set a piece at a give postion
      *
-     * @param row   the row where the piece is set
-     * @param col   the column where the piece is set
      * @param piece the piece set at the postion
+     * @param row the row of the destination cell
+     * @param col the column of the destination cell
      * @throws IndexOutOfBoundsException catch illegal positions
      */
-    public void setPiece(int row, int col, Piece piece) throws IndexOutOfBoundsException {
+    public void setPiece(Piece piece, int row, int col) throws IndexOutOfBoundsException {
         if (this.outOfBounds(row, col))
             throw new IndexOutOfBoundsException();
         this.cells[row][col] = new Cell(row, col, piece);
@@ -103,15 +115,14 @@ public class Board {
      * Check if a move is legal
      *
      * @param cellFrom the cell from where the piece is moved
-     * @param rowTo    the destination row
-     * @param colTo    the destination column
+     * @param dest the destination cell
      * @return true is the move is legal, false if it is illegal
      */
-    private boolean isALegalMove(Cell cellFrom, int rowTo, int colTo) {
+    private boolean isALegalMove(Cell cellFrom, Cell dest) {
         ArrayList<Cell> possibleMoves = Piece.getLegalMoves(cellFrom, null);
         for (Cell currentMove : possibleMoves) {
             if (!this.outOfBounds(currentMove.getRow(), currentMove.getCol())) {
-                if (currentMove.getCol() == colTo && currentMove.getRow() == rowTo)
+                if (currentMove.getCol() == dest.getCol() && currentMove.getRow() == dest.getRow())
                     return true;
             }
         }
@@ -121,9 +132,9 @@ public class Board {
     /**
      * Check if a position if out of bounds of the board
      *
-     * @param row the row of the position
-     * @param col the column of the position
-     * @return true if the position if within the board, false if it is outside the board
+     *
+     * @param row the row of the cell
+     * @param col the column of the cell
      */
     private boolean outOfBounds(int row, int col) {
         return !(row >= 0 && row < BoardDimensions.MAX_ROW.getValue() && col >= 0 && col < BoardDimensions.MAX_COL.getValue());
@@ -145,22 +156,22 @@ public class Board {
     private void setVoidPieces() {
         for (int row = 0; row < BoardDimensions.MAX_ROW.getValue(); row++) {
             for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
-                this.setPiece(row, col, new VoidPiece());
+                this.setPiece(new VoidPiece(), row, col);
             }
         }
 
     }
 
     /**
-     * Set pieces for the give row (0 for blacks, 7 for whites)
+     * Set pieces for the given row (0 for blacks, 7 for whites)
      *
      * @param row   the row
      * @param color the color of the pieces
      */
     private void setPieces(int row, COLOR color) {
         Piece piece = null;
-        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-            switch (i) {
+        for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+            switch (col) {
                 case 0:
                 case 7:
                     piece = new Rook(color);
@@ -181,11 +192,11 @@ public class Board {
                     break;
                 default:
             }
-            this.setPiece(row, i, piece);
+            this.setPiece(piece, row, col);
         }
         int pawnRow = color == COLOR.BLACK ? 1 : 6;
-        for (int j = 0; j < BoardDimensions.MAX_COL.getValue(); j++) {
-            this.setPiece(pawnRow, j, new Pawn(color));
+        for (int col = 0; col < BoardDimensions.MAX_COL.getValue(); col++) {
+            this.setPiece(new Pawn(color), pawnRow, col);
         }
     }
 

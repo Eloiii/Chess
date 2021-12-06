@@ -118,12 +118,12 @@ public class WindowController {
         return null;
     }
 
-    public void moveImages(Cell from, int rowTo, int colTo) {
+    public void moveImages(Cell from, Cell dest) {
         Pane paneFrom = (Pane) getNodeFromGridPane(from.getRow(), from.getCol());
         assert paneFrom != null;
         ImageView imageView = (ImageView) paneFrom.getChildren().get(0);
 
-        Pane paneTo = (Pane) getNodeFromGridPane(rowTo, colTo);
+        Pane paneTo = (Pane) getNodeFromGridPane(dest.getRow(), dest.getCol());
         assert paneTo != null;
         this.setImage(paneTo, imageView);
         paneFrom.getChildren().clear();

@@ -17,6 +17,7 @@ public class Pawn implements Piece {
 
 
     public ArrayList<Cell> getBasicMoves(Cell position) {
+        //TODO EN PASSANT
         Board board = Board.getInstance();
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();

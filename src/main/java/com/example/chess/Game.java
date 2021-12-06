@@ -159,7 +159,7 @@ public class Game {
         controller.moveImages(this.cellSelected, dest);
         Cell destination = this.board.at(dest.getRow(), dest.getCol());
         checkAndSetIfKingChecked(destination);
-        isCheckMate();
+        isGameOver();
         this.cellSelected = null;
         this.nextTurn();
         this.changeTurn();
@@ -169,7 +169,8 @@ public class Game {
      * Check if checkmate
      *
      */
-    public void isCheckMate() {
+    public void isGameOver() {
+        //TODO PAT
         COLOR opponent = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
         Cell opponentKing = this.board.getCellByPiece(new King(opponent), opponent);
         ArrayList<Cell> possibleMoves = opponentKing.getLegalMovesForPiece();

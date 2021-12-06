@@ -20,6 +20,7 @@ public class King implements Piece {
     }
 
     public ArrayList<Cell> getBasicMoves(Cell position) {
+        //TODO ROQUE
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
         int row = position.getRow();

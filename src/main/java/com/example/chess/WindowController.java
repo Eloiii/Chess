@@ -34,6 +34,7 @@ public class WindowController {
             rowConstraints.setVgrow(Priority.ALWAYS);
             grid.getRowConstraints().add(rowConstraints);
         }
+        resetColors(board);
     }
 
     private void addPane(int colIndex, int rowIndex, Board board) {

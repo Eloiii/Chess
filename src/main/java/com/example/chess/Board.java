@@ -267,31 +267,5 @@ public class Board {
         return cellsBetweenc1Andc2;
     }
 
-    /**
-     * Check if a given cell is under attack by a piece from the given color
-     *
-     * @param cell  the cell
-     * @param color the color attacking
-     * @return true if the cell is under attack, false either
-     */
-    public boolean isUnderAttack(Cell cell, COLOR color) {
-        ArrayList<Cell> allCellsOfPiecesForColor = this.getAllCellsForColor(color);
-        ArrayList<Cell> possiblesMoves;
-        for (Cell piece : allCellsOfPiecesForColor) {
-            if(piece.getPiece() instanceof  King) {
-                if(cell.distanceFrom(piece) <= 2)
-                    return true;
-                else continue;
-            }
-            if(piece.getPiece() instanceof Pawn)
-                possiblesMoves = ((Pawn) piece.getPiece()).getDiagonalCells(this, piece, true);
-            else
-                possiblesMoves = Piece.getLegalMoves(piece, null);
-            if (possiblesMoves.contains(cell))
-                return true;
-        }
-        return false;
-    }
-
 
 }

@@ -120,9 +120,34 @@ public class Cell {
 
     public boolean isProtected() {
         ArrayList<Cell> allPiecesForOppositColor = Board.getInstance().getAllCellsForColor(this.piece.getColor());
-        //TODO CALCUL DES PROTECTED CELLS SE FAIT SUR LE COUP DAVANT MDRR
         for (Cell cell : allPiecesForOppositColor) {
             if(cell.getPiece().getProtectedCells().contains(this))
+                return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if this cell is under attack by a piece from the given color
+     *
+     * @param color the color attacking
+     * @return true if the cell is under attack, false either
+     */
+    public boolean isUnderAttack(COLOR color) {
+        Board board = Board.getInstance();
+        ArrayList<Cell> allCellsOfPiecesForColor = board.getAllCellsForColor(color);
+        ArrayList<Cell> possiblesMoves;
+        for (Cell piece : allCellsOfPiecesForColor) {
+            if(piece.getPiece() instanceof  King) {
+                if(this.distanceFrom(piece) <= 2)
+                    return true;
+                else continue;
+            }
+            if(piece.getPiece() instanceof Pawn)
+                possiblesMoves = ((Pawn) piece.getPiece()).getDiagonalCells(board, piece, true);
+            else
+                possiblesMoves = Piece.getLegalMoves(piece, null);
+            if (possiblesMoves.contains(this))
                 return true;
         }
         return false;

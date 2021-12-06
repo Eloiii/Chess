@@ -82,13 +82,7 @@ public interface Piece {
         ArrayList<Cell> possibleMoves = targetedPiece.getBasicMoves(source);
         if (targetedPiece instanceof King) {
             possibleMoves.removeIf(move -> board.isUnderAttack(move, targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
-            for(Cell cell : possibleMoves) {
-                if(!cell.getPiece().isVoidPiece()) {
-                    if(cell.isProtected())
-                        possibleMoves.remove(cell);
-                }
-
-            }
+            possibleMoves.removeIf(cell -> !cell.getPiece().isVoidPiece() && cell.isProtected());
         } else
             Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
 

@@ -2,12 +2,19 @@ package com.example.chess;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WindowController {
 
@@ -15,14 +22,83 @@ public class WindowController {
     @FXML
     private GridPane grid;
 
+    @FXML
+    private GridPane infos;
+
+    private Clock whiteClock;
+    private Clock blackClock;
+
     public void initialize() {
-        //TODO previous moves, timer and turn
+        initGrid();
+        initInfos();
+    }
+
+    private void initInfos() {
+        ColumnConstraints colConstraints = new ColumnConstraints();
+        colConstraints.setHgrow(Priority.ALWAYS);
+        infos.getColumnConstraints().add(colConstraints);
+
+        initMovesGrid();
+        initWhiteTimer();
+        initBlackTimer();
+    }
+
+    private void initMovesGrid() {
+        RowConstraints moves = new RowConstraints();
+        moves.setVgrow(Priority.ALWAYS);
+        grid.getRowConstraints().add(moves);
+
+        GridPane movesGrid = new GridPane();
+        movesGrid.setPrefSize(300, 400);
+        infos.add(movesGrid, 0, 1);
+    }
+
+    private void initBlackTimer() {
+        RowConstraints timerBlack = new RowConstraints();
+        timerBlack.setVgrow(Priority.ALWAYS);
+        grid.getRowConstraints().add(timerBlack);
+        Label timerBlackText = setUpTimer();
+        infos.add(timerBlackText, 0, 0);
+        this.blackClock = new Clock(300, timerBlackText);
+    }
+
+    private void initWhiteTimer() {
+        RowConstraints timerWhite = new RowConstraints();
+        timerWhite.setVgrow(Priority.ALWAYS);
+        grid.getRowConstraints().add(timerWhite);
+        Label timerWhiteText = setUpTimer();
+        infos.add(timerWhiteText, 0, 2);
+        this.whiteClock = new Clock(300, timerWhiteText);
+        this.whiteClock.startTimer();
+    }
+
+    private Label setUpTimer() {
+        Label timerText = new Label();
+        timerText.setPrefSize(300, 200);
+        timerText.setAlignment(Pos.CENTER);
+        timerText.setFont(Font.font("Arial", 56));
+
+        return timerText;
+    }
+
+    public void resumeWhiteTimer() {
+        this.whiteClock.resume();
+    }
+
+    public void resumeBlackTimer() {
+        this.blackClock.resume();
+    }
+
+    public void pauseWhiteClock() {
+        this.whiteClock.pause();
+    }
+
+    public void pauseBlackClock() {
+        this.blackClock.pause();
+    }
+
+    private void initGrid() {
         Board board = Board.getInstance();
-        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
-            for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
-                addPane(i, j, board);
-            }
-        }
 
         for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
             ColumnConstraints colConstraints = new ColumnConstraints();
@@ -35,7 +111,14 @@ public class WindowController {
             rowConstraints.setVgrow(Priority.ALWAYS);
             grid.getRowConstraints().add(rowConstraints);
         }
-        resetColors(board);
+
+        for (int i = 0; i < BoardDimensions.MAX_COL.getValue(); i++) {
+            for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
+                addPane(i, j, board);
+            }
+        }
+
+
     }
 
     private void addPane(int colIndex, int rowIndex, Board board) {

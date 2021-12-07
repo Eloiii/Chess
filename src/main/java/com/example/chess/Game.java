@@ -56,8 +56,17 @@ public class Game {
      * or
      * WHITE -> BLACK
      */
-    private void changeTurn() {
-        this.turn = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+    private void changeTurn(WindowController controller) {
+        if(this.turn == COLOR.BLACK) {
+            controller.pauseBlackClock();
+            controller.resumeWhiteTimer();
+            this.turn = COLOR.WHITE;
+        } else {
+            controller.pauseWhiteClock();
+            controller.resumeBlackTimer();
+            this.turn = COLOR.BLACK;
+        }
+
     }
 
     /**
@@ -65,15 +74,6 @@ public class Game {
      */
     public void nextTurn() {
         this.turnNumber++;
-    }
-
-    /**
-     * Get the board of the game
-     *
-     * @return the board
-     */
-    public Board getBoard() {
-        return board;
     }
 
     /**
@@ -162,7 +162,7 @@ public class Game {
         isGameOver();
         this.cellSelected = null;
         this.nextTurn();
-        this.changeTurn();
+        this.changeTurn(controller);
     }
 
     /**

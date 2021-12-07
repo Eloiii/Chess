@@ -23,8 +23,9 @@ public class Launcher extends Application {
         stage.getIcons().add(new Image(Objects.requireNonNull(Launcher.class.getResourceAsStream("logo.png"))));
         stage.setTitle("Echecs en gros");
         stage.setMinHeight(800);
-        stage.setMinWidth(800);
-        stage.setScene(new Scene(root, 800, 800));
+        stage.setMinWidth(1108);
+        stage.setResizable(false);
+        stage.setScene(new Scene(root, 1108, 800));
         stage.sizeToScene();
         stage.show();
 
@@ -32,10 +33,10 @@ public class Launcher extends Application {
             try {
                 stop();
                 Platform.exit();
+                System.exit(0);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-//        PGNReader.readPGN("D:/Code/Chess/src/main/java/com/example/chess/pgn.txt");
     }
 }

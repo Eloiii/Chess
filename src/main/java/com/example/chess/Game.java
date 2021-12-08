@@ -31,6 +31,10 @@ public class Game {
 
     public boolean checkMate;
 
+    public ArrayList<Move> moves;
+
+    private Move currentMove;
+
     /**
      * Creates a new game
      */
@@ -39,6 +43,7 @@ public class Game {
         this.turn = COLOR.WHITE;
         this.cellSelected = null;
         this.checkMate = false;
+        this.moves = new ArrayList<>();
     }
 
     /**
@@ -73,7 +78,8 @@ public class Game {
      * Add one to the turn number
      */
     public void nextTurn() {
-        this.turnNumber++;
+        if (this.turn == COLOR.BLACK)
+            this.turnNumber++;
     }
 
     /**
@@ -151,23 +157,35 @@ public class Game {
      * Moving a piece on the board
      *
      * @param controller the JavaFX window controller
-     * @param dest the destination cell
-     * @throws IllegalMoveException thrown when illegal move
+     * @param dest       the destination cell
      */
-    private void makeAMove(WindowController controller, Cell dest) throws IllegalMoveException {
-        this.board.move(this.cellSelected, dest);
-        controller.moveImages(this.cellSelected, dest);
-        Cell destination = this.board.at(dest.getRow(), dest.getCol());
-        checkAndSetIfKingChecked(destination);
-        isGameOver();
-        this.cellSelected = null;
-        this.nextTurn();
-        this.changeTurn(controller);
+    private void makeAMove(WindowController controller, Cell dest) {
+        String move;
+        try {
+            move = this.board.move(this.cellSelected, dest);
+            controller.moveImages(this.cellSelected, dest);
+            Cell destination = this.board.at(dest.getRow(), dest.getCol());
+            checkAndSetIfKingChecked(destination);
+            isGameOver();
+            this.cellSelected = null;
+            addMove(move);
+            this.nextTurn();
+            this.changeTurn(controller);
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addMove(String move) {
+        if (this.turn == COLOR.BLACK) {
+            this.currentMove.setBlackMove(move);
+            this.moves.add(this.currentMove);
+        } else
+            this.currentMove = new Move(move);
     }
 
     /**
      * Check if checkmate
-     *
      */
     public void isGameOver() {
         //TODO PAT

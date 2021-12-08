@@ -102,7 +102,7 @@ public class Game {
             ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece();
             colorPossibleMoves(possibleMoves, controller);
         } else {
-            makeAMove(controller, this.board.at(row, col));
+            processMove(controller, this.board.at(row, col));
         }
     }
 
@@ -159,7 +159,7 @@ public class Game {
      * @param controller the JavaFX window controller
      * @param dest       the destination cell
      */
-    private void makeAMove(WindowController controller, Cell dest) {
+    private void processMove(WindowController controller, Cell dest) {
         String move;
         try {
             move = this.board.move(this.cellSelected, dest);
@@ -177,6 +177,8 @@ public class Game {
     }
 
     private void addMove(String move) {
+        //TODO GET TIME FOR A MOVE (CLOCK SINGLETON ?)
+        //TODO ADD MOVES TO JAVAFX
         if (this.turn == COLOR.BLACK) {
             this.currentMove.setBlackMove(move);
             this.moves.add(this.currentMove);

@@ -133,7 +133,9 @@ public class WindowController {
         pane.setMaxSize(100, 100);
         pane.setMinSize(100, 100);
         if ((colIndex + rowIndex) % 2 == 1)
-            pane.setStyle("-fx-background-color: #4b7399");
+            pane.setStyle("-fx-background-color: #a16f5c");
+        else
+            pane.setStyle("-fx-background-color: #ecd3ba");
         Piece piece = board.at(rowIndex, colIndex).getPiece();
         switch (piece.toChar()) {
             case 'P':
@@ -224,10 +226,9 @@ public class WindowController {
             for (int j = 0; j < BoardDimensions.MAX_ROW.getValue(); j++) {
                 Cell cell = board.at(j, i);
                 if ((i + j) % 2 == 1)
-                    colorCell(cell, "#4b7399");
-                if ((i + j) % 2 == 0)
-                    colorCell(cell, "white");
-
+                    colorCell(cell, "#a16f5c");
+                else
+                    colorCell(cell, "#ecd3ba");
             }
         }
     }

@@ -20,7 +20,6 @@ public class King implements Piece {
     }
 
     public ArrayList<Cell> getBasicMoves(Cell position) {
-        //TODO ROQUE
         ArrayList<Cell> results = new ArrayList<>();
         this.protectedCells = new ArrayList<>();
         int row = position.getRow();
@@ -43,8 +42,18 @@ public class King implements Piece {
             Piece.addMoveAndTestEmptyCell(row, col + 1, results, protectedCells, this.color);
         if (col != 0)
             Piece.addMoveAndTestEmptyCell(row, col - 1, results, protectedCells, this.color);
-
+        results.addAll(getCastlingMoves());
         return results;
+    }
+
+    private ArrayList<Cell> getCastlingMoves() {
+        ArrayList<Cell> res = new ArrayList<>();
+        Board board = Board.getInstance();
+        //king side
+        //TODO GET MOVES (from branch graphicRevamp) AND CHANGE IT TO HAVE CELLS INSTEAD OF STRINGS, CHECK THE PIECE OF THE CELLS IF THE KING APPEARS
+        //TODO IF IT APPEARS : NOT LEGAL TO CASTLE
+        //TODO ELSE CHECK IF THE ROOK DIDNT MOVE AND NO PIECES BETWEEN KING AND ROOK AND NO CELL CONTROLLED BY OPPONENT PIECE ON THE KINGS WAY
+        return res;
     }
 
     @Override

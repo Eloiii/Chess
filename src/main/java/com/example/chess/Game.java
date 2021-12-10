@@ -135,7 +135,7 @@ public class Game {
      */
     private void colorPossibleMoves(ArrayList<Cell> moves, WindowController controller) {
         for (Cell move : moves)
-            controller.colorCell(move, "red");
+            controller.colorCell(move, "#811331");
     }
 
     /**
@@ -165,6 +165,7 @@ public class Game {
             move = this.board.move(this.cellSelected, dest);
             controller.moveImages(this.cellSelected, dest);
             Cell destination = this.board.at(dest.getRow(), dest.getCol());
+            colorLastMove(controller, dest);
             checkAndSetIfKingChecked(destination);
             isGameOver();
             this.cellSelected = null;
@@ -174,6 +175,11 @@ public class Game {
         } catch (IllegalMoveException e) {
             e.printStackTrace();
         }
+    }
+
+    private void colorLastMove(WindowController controller, Cell dest) {
+        controller.colorCell(this.cellSelected, "#E1C699");
+        controller.colorCell(dest, "#E1C699");
     }
 
     private void addMove(String move) {

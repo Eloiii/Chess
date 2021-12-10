@@ -84,17 +84,24 @@ public class Board {
     public String moveToString(Cell source, Cell dest) {
         String sourceCoo = source.coordinates();
         String destCoo = dest.coordinates();
+        StringBuilder rawMove = new StringBuilder();
         if (!dest.getPiece().isVoidPiece()) {
             if (source.getPiece() instanceof Pawn)
-                return sourceCoo.charAt(0) + "x" + destCoo;
+                rawMove.append(sourceCoo.charAt(0)).append("x").append(destCoo);
             else
-                return source.getPiece().toChar() + "x" + destCoo;
+                rawMove.append(source.getPiece().toChar()).append("x").append(destCoo);
         } else {
             if (source.getPiece() instanceof Pawn)
-                return destCoo;
+                rawMove.append(destCoo);
             else
-                return source.getPiece().toChar() + destCoo;
+                rawMove.append(source.getPiece().toChar()).append(destCoo);
         }
+        COLOR color = Game.getInstance().getOpponent();
+        King king = (King) this.getCellByPiece(new King(color), color).getPiece();
+        //TODO DOESNT WORK KING CHECK IS CHECKED AFTER THIS LOL
+        if (king.isInCheck())
+            rawMove.append('+');
+        return rawMove.toString();
     }
 
     /**

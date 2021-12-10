@@ -82,6 +82,10 @@ public class Game {
             this.turnNumber++;
     }
 
+    public COLOR getOpponent() {
+        return this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+    }
+
     /**
      * Get the selected cell
      * If the cell selected is not null and the color is the opponent, a move is played
@@ -123,7 +127,7 @@ public class Game {
                 return;
             }
         }
-        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        COLOR color = this.getOpponent();
         ((King) board.getCellByPiece(new King(color), color).getPiece()).setCheck(false, null);
     }
 
@@ -162,14 +166,15 @@ public class Game {
     private void processMove(WindowController controller, Cell dest) {
         String move;
         try {
+
             move = this.board.move(this.cellSelected, dest);
-            controller.moveImages(this.cellSelected, dest);
             Cell destination = this.board.at(dest.getRow(), dest.getCol());
-            colorLastMove(controller, dest);
-            checkAndSetIfKingChecked(destination);
-            isGameOver();
+            this.checkAndSetIfKingChecked(destination);
+            controller.moveImages(this.cellSelected, dest);
+            this.colorLastMove(controller, dest);
+            this.isGameOver();
             this.cellSelected = null;
-            addMove(controller, move);
+            this.addMove(controller, move);
             this.nextTurn();
             this.changeTurn(controller);
         } catch (IllegalMoveException e) {
@@ -183,7 +188,6 @@ public class Game {
     }
 
     private void addMove(WindowController controller, String move) {
-        //TODO GET TIME FOR A MOVE (CLOCK SINGLETON ?)
         if (this.turn == COLOR.BLACK) {
             this.currentMove.setBlackMove(move);
             this.moves.add(this.currentMove);
@@ -198,7 +202,7 @@ public class Game {
      */
     public void isGameOver() {
         //TODO PAT
-        COLOR opponent = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        COLOR opponent = this.getOpponent();
         Cell opponentKing = this.board.getCellByPiece(new King(opponent), opponent);
         ArrayList<Cell> possibleMoves = opponentKing.getLegalMovesForPiece();
         if(possibleMoves.isEmpty() && ((King) opponentKing.getPiece()).isInCheck()) {

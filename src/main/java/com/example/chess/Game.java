@@ -169,7 +169,7 @@ public class Game {
             checkAndSetIfKingChecked(destination);
             isGameOver();
             this.cellSelected = null;
-            addMove(move);
+            addMove(controller, move);
             this.nextTurn();
             this.changeTurn(controller);
         } catch (IllegalMoveException e) {
@@ -182,14 +182,15 @@ public class Game {
         controller.colorCell(dest, "#E1C699");
     }
 
-    private void addMove(String move) {
+    private void addMove(WindowController controller, String move) {
         //TODO GET TIME FOR A MOVE (CLOCK SINGLETON ?)
-        //TODO ADD MOVES TO JAVAFX
         if (this.turn == COLOR.BLACK) {
             this.currentMove.setBlackMove(move);
             this.moves.add(this.currentMove);
+
         } else
             this.currentMove = new Move(move);
+        controller.addMove(this.currentMove);
     }
 
     /**

@@ -5,16 +5,15 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class WindowController {
 
@@ -27,6 +26,8 @@ public class WindowController {
 
     private Clock whiteClock;
     private Clock blackClock;
+
+    private TableView<Move> table;
 
     public void initialize() {
         initGrid();
@@ -41,6 +42,35 @@ public class WindowController {
         initMovesGrid();
         initWhiteTimer();
         initBlackTimer();
+        initMovesTable();
+    }
+
+    private void initMovesTable() {
+        this.table = new TableView<>();
+
+        TableColumn<Move, String> column1 = new TableColumn<>("White");
+        column1.setCellValueFactory(new PropertyValueFactory<>("whiteMove"));
+        column1.setPrefWidth(150);
+
+        TableColumn<Move, String> column2 = new TableColumn<>("Black");
+        column2.setCellValueFactory(new PropertyValueFactory<>("blackMove"));
+        column2.setPrefWidth(150);
+
+        this.table.getColumns().add(column1);
+        this.table.getColumns().add(column2);
+
+        this.table.setEditable(false);
+        this.table.setPrefSize(300, 400);
+        infos.add(this.table, 0, 1);
+
+    }
+
+    public void addMove(Move move) {
+        if (move.getBlackMove() == null)
+            this.table.getItems().add(move);
+        else
+            this.table.getItems().set(this.table.getItems().size() - 1, move);
+
     }
 
     private void initMovesGrid() {

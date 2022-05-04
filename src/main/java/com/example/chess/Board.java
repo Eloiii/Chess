@@ -61,15 +61,15 @@ public class Board {
     /**
      * Move a piece from a Cell to another
      *
-     * @param from  the cell from where the piece is moved
+     * @param from the cell from where the piece is moved
      * @param dest the destination cell
      * @throws IllegalMoveException catch an illegal move
      */
-    public void move(Cell from, Cell dest) throws IllegalMoveException {
+    public String move(Cell from, Cell dest) throws IllegalMoveException {
         if (isALegalMove(from, dest)) {
             this.setPiece(new VoidPiece(), from.getRow(), from.getCol());
             this.setPiece(from.getPiece(), dest.getRow(), dest.getCol());
-            System.out.println(moveToString(from, dest));
+            return moveToString(from, dest);
         } else
             throw new IllegalMoveException("Illegal move : " + from.getPiece().toChar() + " tried to move from " + from.getRow() + "," + from.getCol() + " to " + dest.getRow() + "," + dest.getCol());
     }
@@ -81,20 +81,27 @@ public class Board {
      * @param dest the destination cell
      * @return the formated move
      */
-    private String moveToString(Cell source, Cell dest) {
+    public String moveToString(Cell source, Cell dest) {
         String sourceCoo = source.coordinates();
         String destCoo = dest.coordinates();
-        if(!dest.getPiece().isVoidPiece()) {
-            if(source.getPiece() instanceof Pawn)
-                return sourceCoo.charAt(0) + "x" +destCoo;
+        StringBuilder rawMove = new StringBuilder();
+        if (!dest.getPiece().isVoidPiece()) {
+            if (source.getPiece() instanceof Pawn)
+                rawMove.append(sourceCoo.charAt(0)).append("x").append(destCoo);
             else
-                return source.getPiece().toChar() + "x" + destCoo;
+                rawMove.append(source.getPiece().toChar()).append("x").append(destCoo);
         } else {
-            if(source.getPiece() instanceof Pawn)
-                return destCoo;
+            if (source.getPiece() instanceof Pawn)
+                rawMove.append(destCoo);
             else
-                return source.getPiece().toChar() + destCoo;
+                rawMove.append(source.getPiece().toChar()).append(destCoo);
         }
+        COLOR color = Game.getInstance().getOpponent();
+        King king = (King) this.getCellByPiece(new King(color), color).getPiece();
+        //TODO DOESNT WORK KING CHECK IS CHECKED AFTER THIS LOL
+        if (king.isInCheck())
+            rawMove.append('+');
+        return rawMove.toString();
     }
 
     /**

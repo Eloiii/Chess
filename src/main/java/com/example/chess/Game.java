@@ -31,6 +31,10 @@ public class Game {
 
     public boolean checkMate;
 
+    public ArrayList<Move> moves;
+
+    private Move currentMove;
+
     /**
      * Creates a new game
      */
@@ -39,6 +43,7 @@ public class Game {
         this.turn = COLOR.WHITE;
         this.cellSelected = null;
         this.checkMate = false;
+        this.moves = new ArrayList<>();
     }
 
     /**
@@ -56,24 +61,29 @@ public class Game {
      * or
      * WHITE -> BLACK
      */
-    private void changeTurn() {
-        this.turn = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+    private void changeTurn(WindowController controller) {
+        if(this.turn == COLOR.BLACK) {
+            controller.pauseBlackClock();
+            controller.resumeWhiteTimer();
+            this.turn = COLOR.WHITE;
+        } else {
+            controller.pauseWhiteClock();
+            controller.resumeBlackTimer();
+            this.turn = COLOR.BLACK;
+        }
+
     }
 
     /**
      * Add one to the turn number
      */
     public void nextTurn() {
-        this.turnNumber++;
+        if (this.turn == COLOR.BLACK)
+            this.turnNumber++;
     }
 
-    /**
-     * Get the board of the game
-     *
-     * @return the board
-     */
-    public Board getBoard() {
-        return board;
+    public COLOR getOpponent() {
+        return this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
     }
 
     /**
@@ -96,7 +106,7 @@ public class Game {
             ArrayList<Cell> possibleMoves = this.cellSelected.getLegalMovesForPiece();
             colorPossibleMoves(possibleMoves, controller);
         } else {
-            makeAMove(controller, this.board.at(row, col));
+            processMove(controller, this.board.at(row, col));
         }
     }
 
@@ -117,7 +127,7 @@ public class Game {
                 return;
             }
         }
-        COLOR color = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        COLOR color = this.getOpponent();
         ((King) board.getCellByPiece(new King(color), color).getPiece()).setCheck(false, null);
     }
 
@@ -129,7 +139,7 @@ public class Game {
      */
     private void colorPossibleMoves(ArrayList<Cell> moves, WindowController controller) {
         for (Cell move : moves)
-            controller.colorCell(move, "red");
+            controller.colorCell(move, "#811331");
     }
 
     /**
@@ -151,27 +161,48 @@ public class Game {
      * Moving a piece on the board
      *
      * @param controller the JavaFX window controller
-     * @param dest the destination cell
-     * @throws IllegalMoveException thrown when illegal move
+     * @param dest       the destination cell
      */
-    private void makeAMove(WindowController controller, Cell dest) throws IllegalMoveException {
-        this.board.move(this.cellSelected, dest);
-        controller.moveImages(this.cellSelected, dest);
-        Cell destination = this.board.at(dest.getRow(), dest.getCol());
-        checkAndSetIfKingChecked(destination);
-        isGameOver();
-        this.cellSelected = null;
-        this.nextTurn();
-        this.changeTurn();
+    private void processMove(WindowController controller, Cell dest) {
+        String move;
+        try {
+
+            move = this.board.move(this.cellSelected, dest);
+            Cell destination = this.board.at(dest.getRow(), dest.getCol());
+            this.checkAndSetIfKingChecked(destination);
+            controller.moveImages(this.cellSelected, dest);
+            this.colorLastMove(controller, dest);
+            this.isGameOver();
+            this.cellSelected = null;
+            this.addMove(controller, move);
+            this.nextTurn();
+            this.changeTurn(controller);
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void colorLastMove(WindowController controller, Cell dest) {
+        controller.colorCell(this.cellSelected, "#E1C699");
+        controller.colorCell(dest, "#E1C699");
+    }
+
+    private void addMove(WindowController controller, String move) {
+        if (this.turn == COLOR.BLACK) {
+            this.currentMove.setBlackMove(move);
+            this.moves.add(this.currentMove);
+
+        } else
+            this.currentMove = new Move(move);
+        controller.addMove(this.currentMove);
     }
 
     /**
      * Check if checkmate
-     *
      */
     public void isGameOver() {
         //TODO PAT
-        COLOR opponent = this.turn == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
+        COLOR opponent = this.getOpponent();
         Cell opponentKing = this.board.getCellByPiece(new King(opponent), opponent);
         ArrayList<Cell> possibleMoves = opponentKing.getLegalMovesForPiece();
         if(possibleMoves.isEmpty() && ((King) opponentKing.getPiece()).isInCheck()) {

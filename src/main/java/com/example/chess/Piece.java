@@ -65,7 +65,7 @@ public interface Piece {
 
 
     static void filterPinned(ArrayList<Cell> basicMoves) {
-
+        System.out.println("is pinned");
     }
 
     /**
@@ -84,7 +84,7 @@ public interface Piece {
             possibleMoves.removeIf(move -> move.isUnderAttack(targetedPiece.getColor() == COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK));
             possibleMoves.removeIf(cell -> !cell.getPiece().isVoidPiece() && cell.isProtected());
         } else
-            Piece.filterMoves(checkOnMyKing, board, possibleMoves, targetedPiece.isPinned(), targetedPiece.getColor());
+            Piece.filterMoves(checkOnMyKing, board, possibleMoves, isPinned(targetedPiece), targetedPiece.getColor());
 
         return possibleMoves;
     }
@@ -123,5 +123,29 @@ public interface Piece {
      */
     ArrayList<Cell> getProtectedCells();
 
-    boolean isPinned();
+    static boolean isPinned(Piece piece) {
+        if (piece instanceof King)
+            return false;
+        Board board = Board.getInstance();
+
+        //simulate no piece here
+        Cell thisCell = board.getCellByPiece(piece, piece.getColor());
+        board.setPiece(new VoidPiece(), thisCell.getRow(), thisCell.getCol());
+
+        Game game = Game.getInstance();
+        Cell myKing = board.getCellByPiece(new King(piece.getColor()), piece.getColor());
+        boolean res = myKing.isUnderAttack(game.getOpponent());
+
+//        ArrayList<Cell> opponentCells = board.getAllCellsForColor(game.getOpponent());
+//
+//        for(Cell cell : opponentCells) {
+//
+//        }
+
+
+        //reset piece to its own place
+        board.setPiece(piece, thisCell.getRow(), thisCell.getCol());
+
+        return res;
+    }
 }

@@ -60,8 +60,4 @@ public class Queen implements Piece {
         return this.protectedCells;
     }
 
-    @Override
-    public boolean isPinned() {
-        return false;
-    }
 }

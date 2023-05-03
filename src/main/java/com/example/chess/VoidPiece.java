@@ -35,8 +35,4 @@ public class VoidPiece implements Piece {
         return null;
     }
 
-    @Override
-    public boolean isPinned() {
-        return false;
-    }
 }

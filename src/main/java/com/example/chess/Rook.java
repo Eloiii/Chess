@@ -15,10 +15,6 @@ public class Rook implements Piece {
         this.protectedCells = new ArrayList<>();
     }
 
-    public boolean isPinned() {
-        //TODO DETECT IF PINNED
-        return false;
-    }
 
     public ArrayList<Cell> getBasicMoves(Cell position) {
         ArrayList<Cell> results = new ArrayList<>();

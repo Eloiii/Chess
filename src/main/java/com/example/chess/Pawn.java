@@ -91,8 +91,4 @@ public class Pawn implements Piece {
         return this.protectedCells;
     }
 
-    @Override
-    public boolean isPinned() {
-        return false;
-    }
 }
